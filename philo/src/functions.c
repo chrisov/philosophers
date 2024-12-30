@@ -45,3 +45,30 @@ void	is_valid_integer(char **arr)
 	}
 }
 
+int	ft_atoi(const char *str)
+{
+	int	res;
+	int	count;
+	int	sign;
+
+	res = 0;
+	count = 0;
+	sign = 1;
+	while (*str == ' ' || (*str >= 9 && *str <= 13))
+			str++;
+	while (*str == '-' || *str == '+')
+	{
+			if (*str == '-')
+					sign *= -1;
+			if (count > 0)
+					return (0);
+			str++;
+			count++;
+	}
+	while (*str && ft_isdigit(*str))
+	{
+			res = res * 10 + (*str - '0');
+			str++;
+	}
+	return (sign * res);
+}

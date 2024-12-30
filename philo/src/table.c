@@ -12,27 +12,43 @@
 
 #include "../include/philo.h"
 
-static void	param_check(char **arr, int len)
+/**
+ * @brief Creates a new philosopher
+ */
+t_philo	*new_philo(int n)
 {
-	if (len != 4 && len != 5)
-	{
-		printf("%s(Error): Invalid arguments!\n%s", RED, RES);
-		exit (0);
-	}
-	is_valid_integer(arr);
+	t_philo		*philo;
+
+	philo = malloc(sizeof(t_philo));
+	if (!philo)
+		exit (1);
+	philo->thread_id = n;
+	philo->philo_id = n;
+	philo->fork_up = false;
+	philo->ate = false;
+	philo->slept = false;
+	philo->thought = false;
+	philo->next_philo = NULL;
+	return (philo);
 }
 
-int	main(int argc, char **argv)
+/**
+ * @brief Initializes the table with num number of philosophers.
+ */
+void	table_init(t_philo **head, int num)
 {
-	t_philo	*philo;
+	t_philo	*current;
+	int		i;
 
-	param_check(++argv, --argc);
-	table_init(&philo, ft_atoi(argv[0]));
-	int j = 0;
-	while (j++ < 20)
+	i = 1;
+	(*head) = new_philo(i++);
+	current = *head;
+	while (i <= num)
 	{
-		printf("%d -> ", philo->philo_id);
-		philo = philo->next_philo;
+		current->next_philo = new_philo(i++);
+		if (!current->next_philo)
+			exit (1);
+		current = current->next_philo;
 	}
-	return (0);
+	current->next_philo = (*head);
 }

@@ -25,14 +25,18 @@
 
 typedef struct s_philo
 {
-	pthread_t		id;
-	unsigned int	index;
-	bool			fork;
+	pthread_t		thread_id;
+	unsigned int	philo_id;
+	struct s_philo	*next_philo;
+	bool			fork_up;
 	bool			ate;
 	bool			slept;
 	bool			thought;
 }			t_philo;
 
 void	is_valid_integer(char **arr);
+int		ft_atoi(const char *str);
+t_philo	*new_philo(int n);
+void	table_init(t_philo **head, int num);
 
 #endif
