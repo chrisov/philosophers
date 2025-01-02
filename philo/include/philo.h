@@ -21,6 +21,9 @@
 # include <stdbool.h>
 
 # define RED "\033[1;31m"
+# define YEL "\033[1;33m"
+# define BL "\033[1;34m"
+# define PUR "\033[1;35m"
 # define RES "\033[0m"
 
 typedef struct s_philo
@@ -34,12 +37,10 @@ typedef struct s_philo
 	struct s_philo	*next_philo;
 }			t_philo;
 
-
-
 void	is_valid_integer(char **arr);
 int		ft_atoi(const char *str);
 long	duration(struct timeval start);
-t_philo	*new_philo(int n, char **params);
 void	table_init(t_philo **head, char **params);
+void	*routine(void *args);
 
 #endif

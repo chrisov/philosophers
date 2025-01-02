@@ -15,7 +15,7 @@
 /**
  * @brief Creates a new philosopher
  */
-t_philo	*new_philo(int id, char **params)
+static t_philo	*new_philo(int id, char **params)
 {
 	t_philo			*philo;
 	pthread_mutex_t	fork_mtx;
