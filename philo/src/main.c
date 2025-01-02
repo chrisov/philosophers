@@ -71,7 +71,6 @@ static void	eating(t_philo **philo, long *time)
 		}
 		usleep(1000);
 	}
-	*time += duration(start);
 }
 
 static long	thinking(t_philo *philo, long *time)
