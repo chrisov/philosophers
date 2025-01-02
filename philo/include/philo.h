@@ -38,6 +38,7 @@ typedef struct s_philo
 
 void	is_valid_integer(char **arr);
 int		ft_atoi(const char *str);
+long	duration(struct timeval start);
 t_philo	*new_philo(int n, char **params);
 void	table_init(t_philo **head, char **params);
 

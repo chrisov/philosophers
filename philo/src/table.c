@@ -56,5 +56,5 @@ void	table_init(t_philo **head, char **params)
 			exit (1);
 		current = current->next_philo;
 	}
-	// current->next_philo = (*head);
+	current->next_philo = (*head);
 }

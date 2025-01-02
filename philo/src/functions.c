@@ -72,3 +72,15 @@ int	ft_atoi(const char *str)
 	}
 	return (sign * res);
 }
+
+long	duration(struct timeval start)
+{
+	struct timeval	now;
+	long			sec;
+	long			usec;
+
+	gettimeofday(&now, NULL);
+	sec = now.tv_sec - start.tv_sec;
+	usec = now.tv_usec - start.tv_usec;
+	return ((sec + usec / 1e6) * 1e3);
+}

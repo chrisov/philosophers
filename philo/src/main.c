@@ -22,128 +22,118 @@ static void	param_check(char **arr, int len)
 	is_valid_integer(arr);
 }
 
-static void	monitor_table(t_philo *philo, long start)
-{
-	struct timeval	now;
-	t_philo			*current;
-	unsigned int	starting_id;
+// static void	monitor_table(t_philo *philo, struct timeval start)
+// {
+// 	t_philo			*current;
+// 	unsigned int	starting_id;
 
-	starting_id = philo->philo_id;
-	current = philo->next_philo;
+// 	starting_id = philo->philo_id;
+// 	current = philo->next_philo;
+// 	while (1)
+// 	{
+// 		if (current->fork_up || current->next_philo->fork_up
+// 			|| duration(start) - current->last_meal > ft_atoi(current->actvt_time[0]))
+// 		{
+// 			printf("[%d] %d died\n", duration(start), current->philo_id);
+// 			// free()
+// 			exit(0);
+// 		}
+// 		if (current->philo_id == starting_id)
+// 			break ;
+// 		current = current->next_philo;
+// 		usleep(1000);
+// 	}
+// }
+
+static void	eating(t_philo **philo, long *time)
+{
+	struct timeval	start;
+
+	gettimeofday(&start, NULL);
+	// monitor_table(*philo, start);
+	pthread_mutex_lock(&(*philo)->fork);
+	(*philo)->fork_up = true;
+	pthread_mutex_lock(&(*philo)->next_philo->fork);
+	(*philo)->next_philo->fork_up = true;
+	printf("[%ld] %d has taken a fork\n", *time, (*philo)->philo_id);
+	printf("[%ld] %d is eating\n", *time, (*philo)->philo_id);
 	while (1)
 	{
-		gettimeofday(&now, NULL);
-		if (current->fork_up || current->next_philo->fork_up
-			|| now.tv_usec - current->last_meal > ft_atoi(current->actvt_time[0]))
+		if (duration(start) >= ft_atoi((*philo)->actvt_time[1]))
 		{
-			printf("[%ld] %d died\n", now.tv_usec - start, philo->philo_id);
-			// free()
-			exit(0);
-		}
-		if (current->philo_id == starting_id)
+			// (*philo)->last_meal = now.tv_usec - start;
+			pthread_mutex_unlock(&(*philo)->fork);
+			(*philo)->fork_up = false;
+			pthread_mutex_unlock(&(*philo)->next_philo->fork);
+			(*philo)->next_philo->fork_up = false;
 			break ;
-		current = current->next_philo;
+		}
+		usleep(1000);
 	}
+	*time += duration(start);
 }
 
-static void	eating(t_philo *philo, long start)
+static long	thinking(t_philo *philo, long *time)
 {
-	struct timeval	now;
+	struct timeval	start;
 
-	monitor_table(philo, start);
-	pthread_mutex_lock(&philo->fork);
-	philo->fork_up = true;
-	pthread_mutex_lock(&philo->next_philo->fork);
-	philo->next_philo->fork_up = true;
-	gettimeofday(&now, NULL);
-	printf("[%ld] %d has taken a fork", now.tv_usec - start, philo->philo_id);
-	printf("[%ld] %d is eating", now.tv_usec - start, philo->philo_id);
+	// monitor_table(philo, start);
+	gettimeofday(&start, NULL);
 	while (1)
 	{
-		gettimeofday(&now, NULL);
-		if (now.tv_usec - start >= ft_atoi(philo->actvt_time[1]))
+		if (duration(start) >= ft_atoi(philo->actvt_time[2]))
 		{
-			philo->last_meal = now.tv_usec - start;
-			pthread_mutex_unlock(&philo->fork);
-			philo->fork_up = false;
-			pthread_mutex_unlock(&philo->next_philo->fork);
-			philo->next_philo->fork_up = false;
+			time += ft_atoi(philo->actvt_time[2]);
+			printf("[%ld] %d is thinking\n", *time, philo->philo_id);
 			break ;
 		}
+		usleep(1000);
 	}
+	return (ft_atoi(philo->actvt_time[2]));
 }
 
-static void	thinking(t_philo *philo, long start)
+static void	sleeping(t_philo *philo, long *time)
 {
-	struct timeval	now;
+	struct timeval	start;
 
-	monitor_table(philo, start);
-	gettimeofday(&now, NULL);
-	printf("[%ld] %d is thinking", now.tv_usec - start, philo->philo_id);
-}
-
-static void	sleeping(t_philo *philo, long start)
-{
-	struct timeval	now;
-
-	monitor_table(philo, start);
-	gettimeofday(&now, NULL);
-	printf("[%ld] %d is sleeping", now.tv_usec - start, philo->philo_id);
+	// monitor_table(philo, start);
+	gettimeofday(&start, NULL);
+	while (1)
+	{
+		if (duration(start) >= ft_atoi(philo->actvt_time[1]))
+		{
+			time += ft_atoi(philo->actvt_time[1]);
+			printf("[%ld] %d is sleeping\n", *time, philo->philo_id);
+			break ;
+		}
+		usleep(1000);
+	}
 }
 
 static void *routine(void *args)
 {
 	t_philo			*philo;
 	struct timeval	start;
+	long			elapsed_time;
 
 	philo = (t_philo *)args;
 	gettimeofday(&start, NULL);
-	eating(philo, start.tv_usec);
-	gettimeofday(&start, NULL);
-	thinking(philo, start.tv_usec);
-	gettimeofday(&start, NULL);
-	sleeping(philo, start.tv_usec);
+	elapsed_time = duration(start);
+	eating(&philo, &elapsed_time);
+	sleeping(philo, &elapsed_time);
+	thinking(philo, &elapsed_time);
 	return (NULL);
 }
 
 int	main(int argc, char **argv)
 {
 	t_philo	*philo;
-	int		times;
 
 	param_check(++argv, --argc);
 	table_init(&philo, argv);
-	if (argv[4])
-	{
-		times = ft_atoi(argv[4]);
-		while (times-- != 0)
-		{
-			pthread_create(&philo->thread_id, NULL, routine, &philo);
-			philo = philo->next_philo;
-		}
-	}
-	times = ft_atoi(argv[4]);
-	while (times-- != 0)
-	{
-		pthread_join(philo->thread_id, NULL);
-		pthread_mutex_destroy(&philo->fork);
-		philo = philo->next_philo;
-	}
-	// else
 
-	// while (philo)
-	// {
-	// }
-	// int j = 0;
-	// while (j++ < 20)
-	// {
-	// 	printf("%d ", philo->philo_id);
-	// 	printf("[");
-	// 	int k = 0;
-	// 	while (k < 4)
-	// 		printf("%s ", philo->actvt_time[k++]);
-	// 	printf("] -> \n");
-	// 	philo = philo->next_philo;
-	// }
+	pthread_create(&philo->thread_id, NULL, routine, philo);
+	pthread_join(philo->thread_id, NULL);
+	pthread_mutex_destroy(&philo->fork);
 	return (0);
 }
