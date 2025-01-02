@@ -49,12 +49,13 @@ static void	eating(t_philo **philo, long *time)
 {
 	struct timeval	start;
 
-	gettimeofday(&start, NULL);
 	// monitor_table(*philo, start);
+	gettimeofday(&start, NULL);
 	pthread_mutex_lock(&(*philo)->fork);
 	(*philo)->fork_up = true;
 	pthread_mutex_lock(&(*philo)->next_philo->fork);
 	(*philo)->next_philo->fork_up = true;
+	*time += duration(start);
 	printf("[%ld] %d has taken a fork\n", *time, (*philo)->philo_id);
 	printf("[%ld] %d is eating\n", *time, (*philo)->philo_id);
 	while (1)
@@ -83,7 +84,7 @@ static long	thinking(t_philo *philo, long *time)
 	{
 		if (duration(start) >= ft_atoi(philo->actvt_time[2]))
 		{
-			time += ft_atoi(philo->actvt_time[2]);
+			*time += ft_atoi(philo->actvt_time[2]);
 			printf("[%ld] %d is thinking\n", *time, philo->philo_id);
 			break ;
 		}
@@ -102,7 +103,7 @@ static void	sleeping(t_philo *philo, long *time)
 	{
 		if (duration(start) >= ft_atoi(philo->actvt_time[1]))
 		{
-			time += ft_atoi(philo->actvt_time[1]);
+			*time += ft_atoi(philo->actvt_time[1]);
 			printf("[%ld] %d is sleeping\n", *time, philo->philo_id);
 			break ;
 		}
@@ -113,12 +114,11 @@ static void	sleeping(t_philo *philo, long *time)
 static void *routine(void *args)
 {
 	t_philo			*philo;
-	struct timeval	start;
+	// struct timeval	start;
 	long			elapsed_time;
 
 	philo = (t_philo *)args;
-	gettimeofday(&start, NULL);
-	elapsed_time = duration(start);
+	elapsed_time = 0;
 	eating(&philo, &elapsed_time);
 	sleeping(philo, &elapsed_time);
 	thinking(philo, &elapsed_time);
