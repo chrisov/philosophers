@@ -21,26 +21,26 @@
 # include <stdbool.h>
 
 # define RED "\033[1;31m"
-# define YEL "\033[1;33m"
-# define BL "\033[1;34m"
-# define PUR "\033[1;35m"
+# define YEL "\033[33m"
+# define BL "\033[34m"
+# define PUR "\033[35m"
 # define RES "\033[0m"
 
 typedef struct s_philo
 {
+	unsigned int	philo_id;
 	pthread_t		thread_id;
 	pthread_mutex_t	fork;
-	bool			fork_up;
-	unsigned int	philo_id;
+	struct timeval	start;
 	long			last_meal;
-	char			**actvt_time;
+	char			**params;
 	struct s_philo	*next_philo;
 }			t_philo;
 
 void	is_valid_integer(char **arr);
 int		ft_atoi(const char *str);
-long	duration(struct timeval start);
-void	table_init(t_philo **head, char **params);
+long	duration_since(struct timeval start);
+void	table_init(t_philo **head, char **params, struct timeval start);
 void	*routine(void *args);
 
 #endif

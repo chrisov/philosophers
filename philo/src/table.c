@@ -15,7 +15,7 @@
 /**
  * @brief Creates a new philosopher
  */
-static t_philo	*new_philo(int id, char **params)
+static t_philo	*new_philo(int id, char **params, struct timeval start_time)
 {
 	t_philo			*philo;
 	pthread_mutex_t	fork_mtx;
@@ -29,8 +29,8 @@ static t_philo	*new_philo(int id, char **params)
 	philo->thread_id = id;
 	philo->philo_id = id;
 	philo->fork = fork_mtx;
-	philo->actvt_time = ++times;
-	philo->fork_up = false;
+	philo->params = ++times;
+	philo->start = start_time;
 	philo->last_meal = 0;
 	philo->next_philo = NULL;
 	return (philo);
@@ -41,17 +41,17 @@ static t_philo	*new_philo(int id, char **params)
  * 
  * @param params Stores the times that each philo needs to eat, sleep and think.
  */
-void	table_init(t_philo **head, char **params)
+void	table_init(t_philo **head, char **params, struct timeval start)
 {
 	t_philo	*current;
 	int		i;
 
 	i = 1;
-	(*head) = new_philo(i++, params);
+	(*head) = new_philo(i++, params, start);
 	current = *head;
 	while (i <= ft_atoi(params[0]))
 	{
-		current->next_philo = new_philo(i++, params);
+		current->next_philo = new_philo(i++, params, start);
 		if (!current->next_philo)
 			exit (1);
 		current = current->next_philo;

@@ -73,7 +73,10 @@ int	ft_atoi(const char *str)
 	return (sign * res);
 }
 
-long	duration(struct timeval start)
+/**
+ * @brief Calculates the duration of a process, given its starting point.
+ */
+long	duration_since(struct timeval start)
 {
 	struct timeval	now;
 	long			sec;
