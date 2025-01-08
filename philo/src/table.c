@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   table.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:09:10 by dchrysov          #+#    #+#             */
-/*   Updated: 2024/12/27 14:02:37 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/01/08 12:34:45 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/philo.h"
+#include "../inc/philo.h"
 
 /**
  * @brief Creates a new philosopher
@@ -26,7 +26,6 @@ static t_philo	*new_philo(int id, char **params, struct timeval start_time)
 	philo = malloc(sizeof(t_philo));
 	if (!philo)
 		exit (1);
-	philo->thread_id = id;
 	philo->philo_id = id;
 	philo->fork = fork_mtx;
 	philo->params = ++times;

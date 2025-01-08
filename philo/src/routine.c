@@ -1,45 +1,62 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:09:10 by dchrysov          #+#    #+#             */
-/*   Updated: 2024/12/27 14:02:37 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/01/08 13:39:21 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/philo.h"
+#include "../inc/philo.h"
 
 static void	eating(t_philo **philo)
 {
+	long	func_start;
+
 	pthread_mutex_lock(&(*philo)->fork);
 	pthread_mutex_lock(&(*philo)->next_philo->fork);
-	printf("%s%ld %d has taken a fork\n", YEL, duration_since((*philo)->start), (*philo)->philo_id);
-	printf("%ld %d is eating\n", duration_since((*philo)->start), (*philo)->philo_id);
-	(*philo)->last_meal = duration_since((*philo)->start);
-	usleep((ft_atoi((*philo)->params[1]) - duration_since((*philo)->start)) * 1000);
-	pthread_mutex_unlock(&(*philo)->fork);
-	pthread_mutex_unlock(&(*philo)->next_philo->fork);
+	printf("%s%ld %d has taken a fork\n", YEL, stopwatch((*philo)->start), (*philo)->philo_id);
+	printf("%ld %d is eating\n", stopwatch((*philo)->start), (*philo)->philo_id);
+	func_start = stopwatch((*philo)->start);
+	(*philo)->last_meal = func_start;
+	while (1)
+	{
+		if (stopwatch((*philo)->start) >= func_start + ft_atoi((*philo)->params[1]))
+		{
+			pthread_mutex_unlock(&(*philo)->fork);
+			pthread_mutex_unlock(&(*philo)->next_philo->fork);
+			break ;
+		}
+		usleep(1000);
+	}
 }
 
 static void	sleeping(t_philo *philo)
 {
-	printf("%s%ld %d is sleeping\n", PUR, duration_since(philo->start), philo->philo_id);
-	usleep((ft_atoi(philo->params[2]) - duration_since(philo->start)) * 1000);
+	long	func_start;
+
+	printf("%s%ld %d is sleeping\n", PUR, stopwatch(philo->start), philo->philo_id);
+	func_start = stopwatch(philo->start);
+	while (1)
+	{
+		if (stopwatch(philo->start) >= func_start + ft_atoi(philo->params[2]))
+			break ;
+		// usleep(1000);
+	}
 }
 
 static void	thinking(t_philo *philo)
 {
-	printf("%s%ld %d is thinking\n", BL, duration_since(philo->start), philo->philo_id);
-	usleep((ft_atoi(philo->params[0]) - ft_atoi(philo->params[1]) - ft_atoi(philo->params[2])) * 1000);
+	printf("%s%ld %d is thinking\n", BL, stopwatch(philo->start), philo->philo_id);
 }
 
 /**
  * @brief routine function for thread creating.
  */
-void *routine(void *args)
+void	*routine(void *args)
 {
 	t_philo			*philo;
 

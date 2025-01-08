@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:09:21 by dchrysov          #+#    #+#             */
-/*   Updated: 2024/12/27 15:19:13 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/01/08 12:33:43 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ typedef struct s_philo
 
 void	is_valid_integer(char **arr);
 int		ft_atoi(const char *str);
-long	duration_since(struct timeval start);
+long	stopwatch(struct timeval start);
 void	table_init(t_philo **head, char **params, struct timeval start);
 void	*routine(void *args);
 

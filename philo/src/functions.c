@@ -6,11 +6,11 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:28:51 by dchrysov          #+#    #+#             */
-/*   Updated: 2024/12/27 13:50:25 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/01/08 12:34:19 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/philo.h"
+#include "../inc/philo.h"
 
 static int	ft_isdigit(int c)
 {
@@ -74,9 +74,9 @@ int	ft_atoi(const char *str)
 }
 
 /**
- * @brief Calculates the duration of a process, given its starting point.
+ * @brief Calculates time passed since the beginning of the program run.
  */
-long	duration_since(struct timeval start)
+long	stopwatch(struct timeval start)
 {
 	struct timeval	now;
 	long			sec;
