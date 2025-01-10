@@ -22,9 +22,10 @@ static void	eating(t_philo **philo)
 	printf("%ld %d is eating\n", stopwatch((*philo)->start), (*philo)->philo_id);
 	func_start = stopwatch((*philo)->start);
 	(*philo)->last_meal = func_start;
+	(*philo)->meals--;
 	while (1)
 	{
-		if (stopwatch((*philo)->start) >= func_start + ft_atoi((*philo)->params[1]))
+		if (stopwatch((*philo)->start) >= func_start + (*philo)->time_to_eat)
 		{
 			pthread_mutex_unlock(&(*philo)->fork);
 			pthread_mutex_unlock(&(*philo)->next_philo->fork);
@@ -42,7 +43,7 @@ static void	sleeping(t_philo *philo)
 	func_start = stopwatch(philo->start);
 	while (1)
 	{
-		if (stopwatch(philo->start) >= func_start + ft_atoi(philo->params[2]))
+		if (stopwatch(philo->start) >= func_start + philo->time_to_sleep)
 			break ;
 		// usleep(1000);
 	}
@@ -61,7 +62,7 @@ void	*routine(void *args)
 	t_philo			*philo;
 
 	philo = (t_philo *)args;
-	while (1)
+	while (philo->meals)
 	{
 		eating(&philo);
 		sleeping(philo);

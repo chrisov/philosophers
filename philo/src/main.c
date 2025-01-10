@@ -38,7 +38,7 @@ static void	*monitor_table(void *args)
 	current = philo->next_philo;
 	while (1)
 	{
-		if (stopwatch(current->start) - current->last_meal > ft_atoi(current->params[0]))
+		if (stopwatch(current->start) - current->last_meal > current->time_to_die)
 		{
 			printf("%ld %d died\n", stopwatch(current->start), current->philo_id);
 			// free()
@@ -76,6 +76,6 @@ int	main(int argc, char **argv)
 		pthread_mutex_destroy(&philo->fork);
 		philo = philo->next_philo;
 	}
-	// free()
+	safe_free(philo);
 	return (0);
 }

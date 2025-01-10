@@ -19,6 +19,7 @@
 # include <pthread.h>
 # include <sys/time.h>
 # include <stdbool.h>
+# include <limits.h>
 
 # define RED "\033[1;31m"
 # define YEL "\033[33m"
@@ -28,12 +29,15 @@
 
 typedef struct s_philo
 {
-	unsigned int	philo_id;
 	pthread_t		thread_id;
 	pthread_mutex_t	fork;
 	struct timeval	start;
+	unsigned int	philo_id;
+	unsigned int	meals;
+	unsigned int	time_to_die;
+	unsigned int	time_to_eat;
+	unsigned int	time_to_sleep;
 	long			last_meal;
-	char			**params;
 	struct s_philo	*next_philo;
 }			t_philo;
 
@@ -42,5 +46,6 @@ int		ft_atoi(const char *str);
 long	stopwatch(struct timeval start);
 void	table_init(t_philo **head, char **params, struct timeval start);
 void	*routine(void *args);
+void	safe_free(t_philo *philo);
 
 #endif

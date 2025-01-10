@@ -87,3 +87,21 @@ long	stopwatch(struct timeval start)
 	usec = now.tv_usec - start.tv_usec;
 	return ((sec + usec / 1e6) * 1e3);
 }
+
+void safe_free(t_philo *philo)
+{
+	t_philo	*current;
+	t_philo	*next;
+
+	if (!philo)
+		return;
+	current = philo;
+	while (current->next_philo != philo)
+	{
+		next = current->next_philo;
+		free(current);
+		current = next;
+	}
+	free(current);
+	current = NULL;
+}

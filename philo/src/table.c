@@ -19,16 +19,20 @@ static t_philo	*new_philo(int id, char **params, struct timeval start_time)
 {
 	t_philo			*philo;
 	pthread_mutex_t	fork_mtx;
-	char			**times;
 
-	times = params;
 	pthread_mutex_init(&fork_mtx, NULL);
 	philo = malloc(sizeof(t_philo));
 	if (!philo)
 		exit (1);
 	philo->philo_id = id;
 	philo->fork = fork_mtx;
-	philo->params = ++times;
+	philo->time_to_die = ft_atoi(params[1]);
+	philo->time_to_eat = ft_atoi(params[2]);
+	philo->time_to_sleep = ft_atoi(params[3]);
+	if (params[4])
+		philo->meals = ft_atoi(params[4]);
+	else
+		philo->meals = INT_MAX;
 	philo->start = start_time;
 	philo->last_meal = 0;
 	philo->next_philo = NULL;
