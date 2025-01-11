@@ -76,7 +76,7 @@ int	ft_atoi(const char *str)
 /**
  * @brief Calculates time passed since the beginning of the program run.
  */
-long	stopwatch(struct timeval start)
+long	timer(struct timeval start)
 {
 	struct timeval	now;
 	long			sec;

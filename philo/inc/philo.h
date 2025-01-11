@@ -29,8 +29,8 @@ typedef struct s_philo
 	pthread_t		thread_id;
 	pthread_mutex_t	fork;
 	pthread_mutex_t	last_meal_mtx;
-	struct timeval	start;
-	unsigned int	philo_id;
+	struct timeval	sit;
+	unsigned int	id;
 	unsigned int	meals;
 	unsigned int	time_to_die;
 	unsigned int	time_to_eat;
@@ -42,7 +42,7 @@ typedef struct s_philo
 
 void	is_valid_integer(char **arr);
 int		ft_atoi(const char *str);
-long	stopwatch(struct timeval start);
+long	timer(struct timeval start);
 void	table_init(t_philo **head, char **params, struct timeval start);
 void	*routine(void *args);
 void	safe_free(t_philo *philo);

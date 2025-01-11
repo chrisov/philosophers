@@ -26,7 +26,7 @@ static t_philo	*new_philo(int id, char **params, struct timeval start_time)
 	philo = malloc(sizeof(t_philo));
 	if (!philo)
 		exit (0);
-	philo->philo_id = id;
+	philo->id = id;
 	philo->fork = fork_mtx;
 	philo->last_meal_mtx = meal_mtx;
 	philo->time_to_die = ft_atoi(params[1]);
@@ -36,7 +36,7 @@ static t_philo	*new_philo(int id, char **params, struct timeval start_time)
 		philo->meals = ft_atoi(params[4]);
 	else
 		philo->meals = INT_MAX;
-	philo->start = start_time;
+	philo->sit = start_time;
 	philo->last_meal = 0;
 	philo->finish = false;
 	philo->next_philo = NULL;
@@ -46,7 +46,7 @@ static t_philo	*new_philo(int id, char **params, struct timeval start_time)
 /**
  * @brief Initializes the table with philosophers.
  * 
- * @param params Stores the times that each philo needs to eat, sleep and think.
+ * @param params Stores the duration that each philo needs to eat, sleep, think.
  */
 void	table_init(t_philo **head, char **params, struct timeval start)
 {
