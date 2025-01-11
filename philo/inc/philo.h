@@ -22,15 +22,13 @@
 # include <limits.h>
 
 # define RED "\033[1;31m"
-# define YEL "\033[33m"
-# define BL "\033[34m"
-# define PUR "\033[35m"
 # define RES "\033[0m"
 
 typedef struct s_philo
 {
 	pthread_t		thread_id;
 	pthread_mutex_t	fork;
+	pthread_mutex_t	last_meal_mtx;
 	struct timeval	start;
 	unsigned int	philo_id;
 	unsigned int	meals;
@@ -38,6 +36,7 @@ typedef struct s_philo
 	unsigned int	time_to_eat;
 	unsigned int	time_to_sleep;
 	long			last_meal;
+	bool			finish;
 	struct s_philo	*next_philo;
 }			t_philo;
 

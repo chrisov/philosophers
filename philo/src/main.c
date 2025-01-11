@@ -20,32 +20,26 @@ static void	param_check(char **arr, int len)
 		exit (0);
 	}
 	is_valid_integer(arr);
-	if (ft_atoi(arr[0]) == 1)
-	{
-		printf("Not enough forks\n");
-		exit (0);
-	}
 }
 
 static void	*monitor_table(void *args)
 {
 	t_philo			*philo;
 	t_philo			*current;
-	unsigned int	starting_id;
 
 	philo = (t_philo *)args;
-	starting_id = philo->philo_id;
 	current = philo->next_philo;
 	while (1)
 	{
-		if (stopwatch(current->start) - current->last_meal > current->time_to_die)
+		pthread_mutex_lock(&philo->last_meal_mtx);
+		if (stopwatch(current->start) - current->last_meal > current->time_to_die
+			&& !philo->finish)
 		{
 			printf("%ld %d died\n", stopwatch(current->start), current->philo_id);
-			// free()
+			// safe_free(philo);
 			exit(0);
 		}
-		if (current->philo_id == starting_id)
-			break ;
+		pthread_mutex_unlock(&philo->last_meal_mtx);
 		current = current->next_philo;
 	}
 	return (NULL);
@@ -65,15 +59,16 @@ int	main(int argc, char **argv)
 	while (i++ < ft_atoi(argv[0]))
 	{
 		pthread_create(&philo->thread_id, NULL, routine, philo);
-		pthread_create(&monitor, NULL, monitor_table, philo);
-		pthread_join(monitor, NULL);
 		philo = philo->next_philo;
 	}
+	pthread_create(&monitor, NULL, monitor_table, philo);
+	pthread_join(monitor, NULL);
 	i = 0;
 	while (i++ < ft_atoi(argv[0]))
 	{
 		pthread_join(philo->thread_id, NULL);
 		pthread_mutex_destroy(&philo->fork);
+		pthread_mutex_destroy(&philo->last_meal_mtx);
 		philo = philo->next_philo;
 	}
 	safe_free(philo);

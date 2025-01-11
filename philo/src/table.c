@@ -19,13 +19,16 @@ static t_philo	*new_philo(int id, char **params, struct timeval start_time)
 {
 	t_philo			*philo;
 	pthread_mutex_t	fork_mtx;
+	pthread_mutex_t	meal_mtx;
 
 	pthread_mutex_init(&fork_mtx, NULL);
+	pthread_mutex_init(&meal_mtx, NULL);
 	philo = malloc(sizeof(t_philo));
 	if (!philo)
-		exit (1);
+		exit (0);
 	philo->philo_id = id;
 	philo->fork = fork_mtx;
+	philo->last_meal_mtx = meal_mtx;
 	philo->time_to_die = ft_atoi(params[1]);
 	philo->time_to_eat = ft_atoi(params[2]);
 	philo->time_to_sleep = ft_atoi(params[3]);
@@ -35,6 +38,7 @@ static t_philo	*new_philo(int id, char **params, struct timeval start_time)
 		philo->meals = INT_MAX;
 	philo->start = start_time;
 	philo->last_meal = 0;
+	philo->finish = false;
 	philo->next_philo = NULL;
 	return (philo);
 }
