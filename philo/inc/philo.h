@@ -40,11 +40,19 @@ typedef struct s_philo
 	struct s_philo	*next_philo;
 }			t_philo;
 
+typedef struct s_table
+{
+	t_philo		*philo;
+	pthread_t	monitor;
+	int			n;
+	int			finished_meals;
+}			t_table;
+
 void	is_valid_integer(char **arr);
 int		ft_atoi(const char *str);
 long	timer(struct timeval start);
-void	table_init(t_philo **head, char **params, struct timeval start);
+void	table_init(t_philo **head, t_table *table, char **params, struct timeval start);
 void	*routine(void *args);
-void	safe_free(t_philo *philo);
+void	safe_free(t_philo *philo, t_table table);
 
 #endif

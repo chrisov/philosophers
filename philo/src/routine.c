@@ -34,7 +34,7 @@ static void	eating(t_philo **philo)
 				pthread_mutex_unlock(&(*philo)->next_philo->fork);
 				break ;
 			}
-			// usleep(1000);
+			usleep(1000);
 		}
 		(*philo)->meals--;
 	}

@@ -48,20 +48,26 @@ static t_philo	*new_philo(int id, char **params, struct timeval start_time)
  * 
  * @param params Stores the duration that each philo needs to eat, sleep, think.
  */
-void	table_init(t_philo **head, char **params, struct timeval start)
+void	table_init(t_philo **head, t_table *table, char **params, struct timeval start)
 {
 	t_philo	*current;
 	int		i;
 
+	table->n = ft_atoi(params[0]);
+	table->finished_meals = 0;
+	table->philo = NULL;
 	i = 1;
 	(*head) = new_philo(i++, params, start);
+	if (!head)
+		exit (0);
 	current = *head;
-	while (i <= ft_atoi(params[0]))
+	while (i <= table->n)
 	{
 		current->next_philo = new_philo(i++, params, start);
 		if (!current->next_philo)
-			exit (1);
+			exit (0);
 		current = current->next_philo;
 	}
 	current->next_philo = (*head);
+	table->philo = *head;
 }
