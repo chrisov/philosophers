@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:09:10 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/01/13 13:14:49 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/01/13 14:23:21 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,17 +55,19 @@ static void	*monitor_table(void *args)
 /**
  * @brief Thread creation and synchronization.
  */
-static void	dinner(t_philo *philo, t_table table)
+static void	dinner(t_table *table)
 {
-	int			i;
+	t_philo	*philo;
+	int		i;
 
 	i = 0;
-	while (i++ < table.n)
+	philo = table->philo;
+	while (i++ < table->n)
 	{
 		pthread_create(&philo->thread_id, NULL, routine, philo);
 		philo = philo->next_philo;
 	}
-	pthread_create(&table.monitor, NULL, monitor_table, &table);
+	pthread_create(&table->monitor, NULL, monitor_table, table);
 }
 
 int	main(int argc, char **argv)
@@ -77,7 +79,7 @@ int	main(int argc, char **argv)
 	param_check(++argv, --argc);
 	gettimeofday(&time, NULL);
 	table_init(&philo, &table, argv, time);
-	dinner(philo, table);
+	dinner(&table);
 	safe_free(philo, table);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:09:10 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/01/08 12:34:45 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/01/13 14:12:08 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static t_philo	*new_philo(int id, char **params, struct timeval start_time)
  * 
  * @param params Stores the duration that each philo needs to eat, sleep, think.
  */
-void	table_init(t_philo **head, t_table *table, char **params, struct timeval start)
+void	 table_init(t_philo **head, t_table *table, char **params, struct timeval start)
 {
 	t_philo	*current;
 	int		i;
