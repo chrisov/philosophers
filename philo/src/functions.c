@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:28:51 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/01/08 12:34:19 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/01/13 13:14:27 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,20 +55,20 @@ int	ft_atoi(const char *str)
 	count = 0;
 	sign = 1;
 	while (*str == ' ' || (*str >= 9 && *str <= 13))
-			str++;
+		str++;
 	while (*str == '-' || *str == '+')
 	{
-			if (*str == '-')
-					sign *= -1;
-			if (count > 0)
-					return (0);
-			str++;
-			count++;
+		if (*str == '-')
+			sign *= -1;
+		if (count > 0)
+			return (0);
+		str++;
+		count++;
 	}
 	while (*str && ft_isdigit(*str))
 	{
-			res = res * 10 + (*str - '0');
-			str++;
+		res = res * 10 + (*str - '0');
+		str++;
 	}
 	return (sign * res);
 }
@@ -88,7 +88,7 @@ long	timer(struct timeval start)
 	return ((sec + usec / 1e6) * 1e3);
 }
 
-void safe_free(t_philo *philo, t_table table)
+void	safe_free(t_philo *philo, t_table table)
 {
 	t_philo	*current;
 	t_philo	*next;
@@ -104,7 +104,7 @@ void safe_free(t_philo *philo, t_table table)
 	}
 	pthread_join(table.monitor, NULL);
 	if (!philo)
-		return;
+		return ;
 	current = philo;
 	while (current->next_philo != philo)
 	{

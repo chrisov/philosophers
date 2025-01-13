@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:09:10 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/01/08 14:40:14 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/01/13 13:14:49 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,22 +42,20 @@ static void	*monitor_table(void *args)
 		{
 			printf("%ld %d died\n", timer(philo->sit), philo->id);
 			pthread_mutex_unlock(&philo->last_meal_mtx);
+			exit (0);
 		}
 		pthread_mutex_unlock(&philo->last_meal_mtx);
 		philo = philo->next_philo;
 	}
 	if (philo->finish)
-	{
 		table->finished_meals++;
-
-	}
 	return (NULL);
 }
 
 /**
  * @brief Thread creation and synchronization.
  */
-static void	dinner(t_philo *philo,t_table table)
+static void	dinner(t_philo *philo, t_table table)
 {
 	int			i;
 

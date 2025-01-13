@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:09:10 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/01/08 13:39:21 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/01/13 13:44:23 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ static void	eating(t_philo **philo)
 				pthread_mutex_unlock(&(*philo)->next_philo->fork);
 				break ;
 			}
-			usleep(1000);
 		}
 		(*philo)->meals--;
 	}
