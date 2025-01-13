@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:09:10 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/01/13 13:48:16 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/01/13 16:43:12 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,13 +60,13 @@ void	*routine(void *args)
 	t_philo			*philo;
 
 	philo = (t_philo *)args;
-	while (!philo->finish)
+	while (philo->meals != 0)
 	{
+		if (philo->meals == 0)
+			philo->finish = true;
 		eating(&philo);
 		sleeping(philo);
 		printf("%ld %d is thinking\n", timer(philo->sit), philo->id);
-		if (philo->meals == 0)
-			philo->finish = true;
 	}
 	return (NULL);
 }
