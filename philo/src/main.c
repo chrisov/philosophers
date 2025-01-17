@@ -25,61 +25,17 @@ static void	param_check(char **arr, int len)
 	is_valid_integer(arr);
 }
 
-/**
- * @brief Routine function for the monitoring thread.
- */
-static void	*monitor_table(void *args)
-{
-	t_table	*table;
-	t_philo	*philo;
-
-	table = (t_table *)args;
-	philo = table->philo;
-	while (!philo->finish)
-	{
-		pthread_mutex_lock(&philo->last_meal_mtx);
-		if (timer(philo->sit) - philo->last_meal > philo->time_to_die)
-		{
-			printf("%ld %d died\n", timer(philo->sit), philo->id);
-			pthread_mutex_unlock(&philo->last_meal_mtx);
-			exit (0);
-		}
-		pthread_mutex_unlock(&philo->last_meal_mtx);
-		philo = philo->next_philo;
-	}
-	if (philo->finish)
-		table->finished_meals++;
-	return (NULL);
-}
-
-/**
- * @brief Thread creation and synchronization.
- */
-static void	dinner(t_table *table)
-{
-	t_philo	*philo;
-	int		i;
-
-	i = 0;
-	philo = table->philo;
-	while (i++ < table->n)
-	{
-		pthread_create(&philo->thread_id, NULL, routine, philo);
-		philo = philo->next_philo;
-	}
-	pthread_create(&table->monitor, NULL, monitor_table, table);
-}
-
 int	main(int argc, char **argv)
 {
-	t_philo			*philo;
-	t_table			table;
 	struct timeval	time;
+	t_philo			*philo;
+	t_fork			*fork;
+
 
 	param_check(++argv, --argc);
 	gettimeofday(&time, NULL);
-	table_init(&philo, &table, argv, time);
-	dinner(&table);
-	safe_free(philo, table);
+	philo = NULL;
+	init(&philo, &fork, argv, time);	
+
 	return (0);
 }

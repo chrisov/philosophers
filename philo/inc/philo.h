@@ -24,35 +24,38 @@
 # define RED "\033[1;31m"
 # define RES "\033[0m"
 
-typedef struct s_philo
+typedef	struct s_fork
 {
-	pthread_t		thread_id;
-	pthread_mutex_t	fork;
-	pthread_mutex_t	last_meal_mtx;
-	struct timeval	sit;
-	unsigned int	id;
-	unsigned int	meals;
-	unsigned int	time_to_die;
-	unsigned int	time_to_eat;
-	unsigned int	time_to_sleep;
-	long			last_meal;
-	bool			finish;
-	struct s_philo	*next_philo;
-}			t_philo;
+	pthread_mutex_t	mtx;
+	int				fork_id;
+}			t_fork;
 
 typedef struct s_table
 {
-	t_philo		*philo;
-	pthread_t	monitor;
-	int			n;
-	int			finished_meals;
+	int				time_to_die;
+	int				time_to_eat;
+	int				time_to_sleep;
+	pthread_mutex_t	last_meal_mtx;
+	pthread_t		monitor;
+	int				n;
+	unsigned int	meals;
 }			t_table;
+
+typedef struct s_philo
+{
+	pthread_t		thread_id;
+	struct timeval	sit;
+	int				id;
+	int				last_meal;
+	int				meals_eaten;
+	bool			full;
+	t_fork			fork;
+	t_table			*table;
+}			t_philo;
 
 void	is_valid_integer(char **arr);
 int		ft_atoi(const char *str);
 long	timer(struct timeval start);
-void	table_init(t_philo **head, t_table *table, char **params, struct timeval start);
-void	*routine(void *args);
-void	safe_free(t_philo *philo, t_table table);
+void	init(t_philo **philo, t_fork **fork, char **argv, struct timeval time);
 
 #endif

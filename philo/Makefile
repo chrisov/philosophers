@@ -1,14 +1,15 @@
 #
 #
 CC = cc
-CFLAGS = -g -pthread -Wall -Werror -Wextra -I$(INCDIR)
+CFLAGS = -g -pthread -fsanitize=address -Wall -Werror -Wextra -I$(INCDIR)
 MAKEFLAGS += -s
 
 SRCDIR = ./src
 OBJDIR = ./obj
 INCDIR = ./include
 
-SRCS = $(SRCDIR)/main.c $(SRCDIR)/functions.c $(SRCDIR)/table.c $(SRCDIR)/routine.c
+SRCS = $(SRCDIR)/main.c $(SRCDIR)/functions.c $(SRCDIR)/table.c 
+# $(SRCDIR)/routine.c
 
 OBJS = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 NAME = philo

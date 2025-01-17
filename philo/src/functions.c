@@ -88,30 +88,3 @@ long	timer(struct timeval start)
 	return ((sec + usec / 1e6) * 1e3);
 }
 
-void	safe_free(t_philo *philo, t_table table)
-{
-	t_philo	*current;
-	t_philo	*next;
-	int		i;
-
-	i = 0;
-	while (i++ < table.n)
-	{
-		pthread_mutex_destroy(&philo->fork);
-		pthread_mutex_destroy(&philo->last_meal_mtx);
-		pthread_join(philo->thread_id, NULL);
-		philo = philo->next_philo;
-	}
-	pthread_join(table.monitor, NULL);
-	if (!philo)
-		return ;
-	current = philo;
-	while (current->next_philo != philo)
-	{
-		next = current->next_philo;
-		free(current);
-		current = next;
-	}
-	free(current);
-	current = NULL;
-}
