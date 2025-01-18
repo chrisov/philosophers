@@ -49,13 +49,14 @@ typedef struct s_philo
 	int				last_meal;
 	int				meals_eaten;
 	bool			full;
-	t_fork			fork;
+	t_fork			*fork;
 	t_table			*table;
 }			t_philo;
 
 void	is_valid_integer(char **arr);
 int		ft_atoi(const char *str);
 long	timer(struct timeval start);
-void	init(t_philo **philo, t_fork **fork, char **argv, struct timeval time);
-
+void	init(t_philo **philo, char **argv, struct timeval time);
+void	err_msg(char *msg);
+void	safe_free(t_philo *philo);
 #endif

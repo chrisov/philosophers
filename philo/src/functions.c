@@ -12,13 +12,6 @@
 
 #include "../inc/philo.h"
 
-static int	ft_isdigit(int c)
-{
-	if (c >= '0' && c <= '9')
-		return (1);
-	return (0);
-}
-
 void	is_valid_integer(char **arr)
 {
 	char	**current;
@@ -34,11 +27,8 @@ void	is_valid_integer(char **arr)
 			exit(0);
 		while (*str)
 		{
-			if (!ft_isdigit((unsigned char)*str))
-			{
-				printf("%sError! (invalid argument)%s\n", RED, RES);
-				exit(0);
-			}
+			if (!(*str >= '0' && *str <= '9'))
+				err_msg("Error! (invalid argument)");
 			str++;
 		}
 		current++;
@@ -65,7 +55,7 @@ int	ft_atoi(const char *str)
 		str++;
 		count++;
 	}
-	while (*str && ft_isdigit(*str))
+	while (*str && (*str >= '0' && *str <= '9'))
 	{
 		res = res * 10 + (*str - '0');
 		str++;
@@ -88,3 +78,31 @@ long	timer(struct timeval start)
 	return ((sec + usec / 1e6) * 1e3);
 }
 
+/**
+ * @brief Prints a custom msg every time it encounters an error.
+ */
+void	err_msg(char *msg)
+{
+        printf("%s%s%s\n",RED, msg, RES);
+        exit(EXIT_FAILURE);
+}
+
+/**
+ * @brief Safe freeing everything.
+ */
+void	safe_free(t_philo *philo)
+{
+	int	i;
+	int	n;
+
+	i = -1;
+	n = philo->table->n;
+	while (++i < n)
+	{
+		pthread_mutex_destroy(&philo[i].fork->mtx);
+		free(philo[i].fork);
+	}
+	free(philo->table);
+	free(philo);
+	philo = NULL;
+}

@@ -12,70 +12,41 @@
 
 #include "../inc/philo.h"
 
-/**
- * @brief Prints a std msg every time it encounters an error.
- */
-static void     err_msg(char *msg)
+static void	*safe_malloc(size_t size, char *msg)
 {
-        printf("%s\n", msg);
-        exit(0);
+	void	*arg;
+
+	arg = malloc(size);
+	if (!arg)
+		err_msg(msg);
+	return (arg);
 }
 
-static void	create_forks(t_fork **fork, char **av)
+void	init(t_philo **philo, char **argv, struct timeval time)
 {
-	t_fork	*current;
-	int		i;
-	int		n;
-
-	n = ft_atoi(av[0]);
-	*fork = malloc(n * sizeof(t_fork));
-	if (!fork)
-		err_msg("Error allocating memory for the forks");
-	current = *fork;
-	i = 0;
-	while (n--)
-	{
-		current->fork_id = i++;
-		pthread_mutex_init(&current->mtx, NULL);
-	}
-}
-
-static void	create_philos(t_philo **philo, char **av, struct timeval time)
-{
-	t_philo *current;
-	int		n;
-	int		i;
-
-	n = ft_atoi(av[0]);
-	*philo = malloc(n * sizeof(t_philo));
-	if (!philo)
-		err_msg("Error allocating memory for philos");
-	current = *philo;
-	i = 0;
-	while (n--)
-	{
-		current->id = i++;
-		current->sit = time;
-		current->full = false;
-		current++;
-	}
-}
-
-static void	create_table(t_table **table, char **av)
-{
-	(*table)->n = ft_atoi(av[0]);
-	(*table)->time_to_die = ft_atoi(av[1]);
-	(*table)->time_to_eat = ft_atoi(av[2]);
-	(*table)->time_to_sleep = ft_atoi(av[3]);
-	if (av[4])
-		(*table)->meals = ft_atoi(av[4]);
+	int	i;
+	t_table	*table;
+	
+	*philo = safe_malloc(ft_atoi(argv[0]) * sizeof(t_philo), "Alloc failed!");
+	table = safe_malloc(sizeof(t_table), "Table alloc failed");
+	table->n = ft_atoi(argv[0]);
+	table->time_to_die = ft_atoi(argv[1]);
+	table->time_to_eat = ft_atoi(argv[2]);
+	table->time_to_sleep = ft_atoi(argv[3]);
+	if (argv[4])
+		table->meals = ft_atoi(argv[4]);
 	else
-		(*table)->meals = INT_MAX;
-}
-
-void	init(t_philo **philo, t_fork **fork, char **argv, struct timeval time)
-{
-	create_philos(philo, argv, time);
-	create_forks(fork, argv);
-	create_table(&(*philo)->table, argv);
+		table->meals = INT_MAX;
+	i = -1;
+	while (++i < ft_atoi(argv[0]))
+	{
+		(*philo)[i].id = i;
+		(*philo)[i].sit = time;
+		(*philo)[i].full = false;
+		(*philo)[i].last_meal = 0;
+		(*philo)[i].table = table;
+		(*philo)[i].fork = safe_malloc(sizeof(t_fork), "Fork alloc failed!");
+		(*philo)[i].fork->fork_id = i;
+		pthread_mutex_init(&(*philo)[i].fork->mtx, NULL);
+	}
 }
