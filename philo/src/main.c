@@ -26,12 +26,16 @@ int	main(int argc, char **argv)
 {
 	struct timeval	time;
 	t_philo			*philo;
+	t_fork			*fork;
 
 	philo = NULL;
 	param_check(++argv, --argc);
 	gettimeofday(&time, NULL);
-	init(&philo, argv, time);
+	init(&philo, &fork, argv, time);
+	// int j = -1;
+	// while (++j < ft_atoi(argv[0]))
+	// 	printf("[%d]: %d -> ", philo[j].id, philo[j].table->fork[j].fork_id);
 	dinner(&philo);
-	safe_free(philo);
+	// safe_free(philo);
 	return (0);
 }

@@ -22,13 +22,14 @@ static void	*safe_malloc(size_t size, char *msg)
 	return (arg);
 }
 
-void	init(t_philo **philo, char **argv, struct timeval time)
+void	init(t_philo **philo, t_fork **fork, char **argv, struct timeval time)
 {
 	int	i;
 	t_table	*table;
 	
-	*philo = safe_malloc(ft_atoi(argv[0]) * sizeof(t_philo), "Alloc failed!");
-	table = safe_malloc(sizeof(t_table), "Table alloc failed");
+	*philo = safe_malloc(ft_atoi(argv[0]) * sizeof(t_philo), "Alloc fail!");
+	*fork = safe_malloc(ft_atoi(argv[0]) * sizeof(t_fork), "Fork alloc fail!");
+	table = safe_malloc(sizeof(t_table), "Table alloc fail!");
 	table->n = ft_atoi(argv[0]);
 	table->time_to_die = ft_atoi(argv[1]);
 	table->time_to_eat = ft_atoi(argv[2]);
@@ -37,6 +38,7 @@ void	init(t_philo **philo, char **argv, struct timeval time)
 		table->meals = ft_atoi(argv[4]);
 	else
 		table->meals = INT_MAX;
+	table->fork = *fork;
 	i = -1;
 	while (++i < ft_atoi(argv[0]))
 	{
@@ -44,9 +46,9 @@ void	init(t_philo **philo, char **argv, struct timeval time)
 		(*philo)[i].sit = time;
 		(*philo)[i].full = false;
 		(*philo)[i].last_meal = 0;
+		(*fork)[i].fork_id = i;
+		if (pthread_mutex_init(&(*fork)[i].mtx, NULL))
+			err_msg("Fork mtx init fail!");
 		(*philo)[i].table = table;
-		(*philo)[i].fork = safe_malloc(sizeof(t_fork), "Fork alloc failed!");
-		(*philo)[i].fork->fork_id = i;
-		pthread_mutex_init(&(*philo)[i].fork->mtx, NULL);
 	}
 }

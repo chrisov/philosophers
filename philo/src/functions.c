@@ -90,19 +90,20 @@ void	err_msg(char *msg)
 /**
  * @brief Safe freeing everything.
  */
-void	safe_free(t_philo *philo)
-{
-	int	i;
-	int	n;
+// void	safe_free(t_philo *philo)
+// {
+// 	int	i;
+// 	int	n;
 
-	i = -1;
-	n = philo->table->n;
-	while (++i < n)
-	{
-		pthread_mutex_destroy(&philo[i].fork->mtx);
-		free(philo[i].fork);
-	}
-	free(philo->table);
-	free(philo);
-	philo = NULL;
-}
+// 	i = -1;
+// 	n = philo->table->n;
+// 	// join threads
+// 	while (++i < n)
+// 	{
+// 		pthread_mutex_destroy(&philo[i].fork->mtx);
+// 		free(philo[i].fork);
+// 	}
+// 	free(philo->table);
+// 	free(philo);
+// 	philo = NULL;
+// }
