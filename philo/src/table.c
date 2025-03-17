@@ -18,37 +18,91 @@ static void	*safe_malloc(size_t size, char *msg)
 
 	arg = malloc(size);
 	if (!arg)
-		err_msg(msg);
+	{
+		perror(msg);
+		exit (EXIT_FAILURE);
+	}
 	return (arg);
 }
 
-void	init(t_philo **philo, t_fork **fork, char **argv, struct timeval time)
+/**
+ * @brief Initializes i = argv[0] number of forks as a circular linked list.
+ *
+ * @note Edge case where argv[0] = 1!
+ */
+static t_fork	*forks_init(char *param)
 {
+	t_fork	*fork;
+	t_fork	*current;
 	int	i;
-	t_table	*table;
-	
-	*philo = safe_malloc(ft_atoi(argv[0]) * sizeof(t_philo), "Alloc fail!");
-	*fork = safe_malloc(ft_atoi(argv[0]) * sizeof(t_fork), "Fork alloc fail!");
-	table = safe_malloc(sizeof(t_table), "Table alloc fail!");
-	table->n = ft_atoi(argv[0]);
-	table->time_to_die = ft_atoi(argv[1]);
-	table->time_to_eat = ft_atoi(argv[2]);
-	table->time_to_sleep = ft_atoi(argv[3]);
-	if (argv[4])
-		table->meals = ft_atoi(argv[4]);
-	else
-		table->meals = INT_MAX;
-	table->fork = *fork;
-	i = -1;
-	while (++i < ft_atoi(argv[0]))
+
+	i = 1;
+	fork = safe_malloc(sizeof(t_fork), "Error allocating fork");
+	fork->id = i;
+	if (pthread_mutex_init(&fork->mtx, NULL) != 0)
+		return(printf("Mutex init failed\n"), NULL);
+	current = fork;
+	while (++i < ft_atoi(param) + 1)
 	{
-		(*philo)[i].id = i;
-		(*philo)[i].sit = time;
-		(*philo)[i].full = false;
-		(*philo)[i].last_meal = 0;
-		(*fork)[i].fork_id = i;
-		if (pthread_mutex_init(&(*fork)[i].mtx, NULL))
-			err_msg("Fork mtx init fail!");
-		(*philo)[i].table = table;
+		current->next = safe_malloc(sizeof(t_fork), "Error allocating fork");
+		current = current->next;
+		current->id = i;
+		if (pthread_mutex_init(&current->mtx, NULL) != 0)
+			return(printf("Fork mutex init failed\n"), NULL);
+		current->next = NULL;
 	}
+	current->next = fork;
+	return (fork);
+}
+
+/**
+ * @brief Init monitor with program's params and the philo list.
+ */
+static t_monitor	*monitor_init(char **param)
+{
+	t_monitor	*monitor;
+
+	monitor = safe_malloc(sizeof(t_monitor), "Error allocating monitor");
+	monitor->n = ft_atoi(param[0]);
+	monitor->time_to_die = ft_atoi(param[1]);
+	monitor->time_to_eat = ft_atoi(param[2]);
+	monitor->time_to_sleep = ft_atoi(param[3]);
+	if (param[4])
+		monitor->meals = ft_atoi(param[4]);
+	else
+		monitor->meals = SHRT_MAX;
+	if (pthread_mutex_init(&monitor->death_mtx, NULL) != 0)
+		return (printf("Monitor mutex init failed\n"), NULL);
+	monitor->end = false;
+	return (monitor);
+}
+
+static t_philo *philos_init(t_fork *fork, t_monitor *monitor, struct timeval time)
+{
+	t_philo	*philos;
+	int		i;
+
+	philos = safe_malloc(monitor->n * sizeof(t_philo), "Error allocating philos");
+	i = -1;
+	while (++i < monitor->n)
+	{
+		philos[i].sit = time;
+		philos[i].right_fork = fork;
+		philos[i].left_fork = fork->next;
+		philos[i].id = i + 1;
+		philos[i].last_meal_time = 0;
+		philos[i].meals_eaten = 0;
+		philos[i].monitor = monitor;
+		philos[i].full = false;
+		fork = fork->next;
+	}
+	return (philos);
+}
+
+void	init_data(t_philo **philo, t_fork **fork,
+		t_monitor **monitor, char **argv, struct timeval time)
+{
+	*fork = forks_init(argv[0]);
+	*monitor = monitor_init(argv);
+	*philo = philos_init(*fork, *monitor, time);
 }

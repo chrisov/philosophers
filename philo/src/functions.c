@@ -28,14 +28,17 @@ void	is_valid_integer(char **arr)
 		while (*str)
 		{
 			if (!(*str >= '0' && *str <= '9'))
-				err_msg("Error! (invalid argument)");
+			{
+				perror("Error! (invalid argument)");
+				exit(EXIT_FAILURE);
+			}
 			str++;
 		}
 		current++;
 	}
 }
 
-int	ft_atoi(const char *str)
+int	ft_atoi(char *str)
 {
 	int	res;
 	int	count;
@@ -63,6 +66,23 @@ int	ft_atoi(const char *str)
 	return (sign * res);
 }
 
+void	end_setter(t_monitor *monitor)
+{
+	pthread_mutex_lock(&monitor->death_mtx);
+	monitor->end = true;
+	pthread_mutex_unlock(&monitor->death_mtx);
+}
+
+bool	end_getter(t_monitor *monitor)
+{
+	bool	res;
+
+	pthread_mutex_lock(&monitor->death_mtx);
+	res = monitor->end;
+	pthread_mutex_unlock(&monitor->death_mtx);
+	return (res);
+}
+
 /**
  * @brief Calculates time passed since the beginning of the program run.
  */
@@ -75,17 +95,29 @@ long	timer(struct timeval start)
 	gettimeofday(&now, NULL);
 	sec = now.tv_sec - start.tv_sec;
 	usec = now.tv_usec - start.tv_usec;
-	return ((sec + usec / 1e6) * 1e3);
+	return ((sec + usec) / 1e3);
 }
+
+void	print_monitor(t_monitor monitor)
+{
+	printf("n: %d\n", monitor.n);
+	printf("die: %d\n", monitor.time_to_die);
+	printf("eat: %d\n", monitor.time_to_eat);
+	printf("sleep: %d\n", monitor.time_to_sleep);
+	if (!monitor.end)
+		printf("end: no\n");
+	else
+		printf("end: yes\n");
+	}
 
 /**
  * @brief Prints a custom msg every time it encounters an error.
  */
-void	err_msg(char *msg)
-{
-        printf("%s%s%s\n",RED, msg, RES);
-        exit(EXIT_FAILURE);
-}
+// void	err_msg(char *msg)
+// {
+//         printf("%s%s%s\n",RED, msg, RES);
+//         exit(EXIT_FAILURE);
+// }
 
 /**
  * @brief Safe freeing everything.
@@ -94,7 +126,6 @@ void	err_msg(char *msg)
 // {
 // 	int	i;
 // 	int	n;
-
 // 	i = -1;
 // 	n = philo->table->n;
 // 	// join threads

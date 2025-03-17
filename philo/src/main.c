@@ -18,7 +18,10 @@
 static void	param_check(char **arr, int len)
 {
 	if (len != 4 && len != 5)
-		err_msg("Error! (Invalid argument)");
+	{
+		printf("%sError!%s (Invalid argument)", RED, RES);
+		exit(EXIT_FAILURE);
+	}
 	is_valid_integer(arr);
 }
 
@@ -27,15 +30,12 @@ int	main(int argc, char **argv)
 	struct timeval	time;
 	t_philo			*philo;
 	t_fork			*fork;
+	t_monitor		*monitor;
 
-	philo = NULL;
 	param_check(++argv, --argc);
 	gettimeofday(&time, NULL);
-	init(&philo, &fork, argv, time);
-	// int j = -1;
-	// while (++j < ft_atoi(argv[0]))
-	// 	printf("[%d]: %d -> ", philo[j].id, philo[j].table->fork[j].fork_id);
-	dinner(&philo);
+	init_data(&philo, &fork, &monitor, argv, time);
+	dinner(&philo, &monitor);
 	// safe_free(philo);
 	return (0);
 }

@@ -27,37 +27,46 @@
 typedef	struct s_fork
 {
 	pthread_mutex_t	mtx;
-	int				fork_id;
+	unsigned short	id;
+	struct s_fork	*next;
 }			t_fork;
 
-typedef struct s_table
+typedef struct s_monitor
 {
-	pthread_t		monitor;
-	t_fork			*fork;
-	int				n;
-	int				time_to_die;
-	int				time_to_eat;
-	int				time_to_sleep;
-	pthread_mutex_t	last_meal_mtx;
-	unsigned int	meals;
-}			t_table;
+	unsigned short	n;
+	unsigned short	time_to_die;
+	unsigned short	time_to_eat;
+	unsigned short	time_to_sleep;
+	unsigned short	meals;
+	pthread_mutex_t	death_mtx;
+	bool			end;
+}			t_monitor;
 
 typedef struct s_philo
 {
-	pthread_t		thread_id;
+	pthread_t		thread;
 	struct timeval	sit;
-	int				id;
-	int				last_meal;
-	int				meals_eaten;
+	t_fork			*right_fork;
+	t_fork			*left_fork;
+	unsigned short	id;
+	unsigned short	meals_eaten;
+	unsigned long	last_meal_time;
+	t_monitor		*monitor;
 	bool			full;
-	t_table			*table;
 }			t_philo;
 
 void	is_valid_integer(char **arr);
-int		ft_atoi(const char *str);
+int		ft_atoi(char *str);
 long	timer(struct timeval start);
+void	end_setter(t_monitor *monitor);
+bool	end_getter(t_monitor *monitor);
 void	err_msg(char *msg);
-void	init(t_philo **philo, t_fork **fork, char **argv, struct timeval time);
-void	dinner(t_philo **philo);
+void	init_data(t_philo **philo, t_fork **fork,
+	t_monitor **monitor, char **argv, struct timeval time);
+void	dinner(t_philo **philo, t_monitor **monitor);
 void	safe_free(t_philo *philo);
+
+
+void	print_monitor(t_monitor monitor);
+
 #endif
