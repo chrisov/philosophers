@@ -58,12 +58,13 @@ static t_fork	*forks_init(char *param)
 /**
  * @brief Init monitor with program's params and the philo list.
  */
-static t_monitor	*monitor_init(char **param)
+static t_monitor	*monitor_init(char **param, struct timeval time)
 {
 	t_monitor	*monitor;
 
 	monitor = safe_malloc(sizeof(t_monitor), "Error allocating monitor");
 	monitor->n = ft_atoi(param[0]);
+	monitor->sit_time = time;
 	monitor->time_to_die = ft_atoi(param[1]);
 	monitor->time_to_eat = ft_atoi(param[2]);
 	monitor->time_to_sleep = ft_atoi(param[3]);
@@ -77,7 +78,7 @@ static t_monitor	*monitor_init(char **param)
 	return (monitor);
 }
 
-static t_philo *philos_init(t_fork *fork, t_monitor *monitor, struct timeval time)
+static t_philo *philos_init(t_fork *fork, t_monitor *monitor)
 {
 	t_philo	*philos;
 	int		i;
@@ -86,7 +87,6 @@ static t_philo *philos_init(t_fork *fork, t_monitor *monitor, struct timeval tim
 	i = -1;
 	while (++i < monitor->n)
 	{
-		philos[i].sit = time;
 		philos[i].right_fork = fork;
 		philos[i].left_fork = fork->next;
 		philos[i].id = i + 1;
@@ -103,6 +103,6 @@ void	init_data(t_philo **philo, t_fork **fork,
 		t_monitor **monitor, char **argv, struct timeval time)
 {
 	*fork = forks_init(argv[0]);
-	*monitor = monitor_init(argv);
-	*philo = philos_init(*fork, *monitor, time);
+	*monitor = monitor_init(argv, time);
+	*philo = philos_init(*fork, *monitor);
 }

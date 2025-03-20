@@ -19,7 +19,7 @@ static void	param_check(char **arr, int len)
 {
 	if (len != 4 && len != 5)
 	{
-		printf("%sError!%s (Invalid argument)", RED, RES);
+		printf("%sError!%s (Invalid argument)\n", RED, RES);
 		exit(EXIT_FAILURE);
 	}
 	is_valid_integer(arr);

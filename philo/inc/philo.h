@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #ifndef PHILO_H
+
 # define PHILO_H
 
 # include <stdio.h>
@@ -33,6 +34,7 @@ typedef	struct s_fork
 
 typedef struct s_monitor
 {
+	struct timeval	sit_time;
 	unsigned short	n;
 	unsigned short	time_to_die;
 	unsigned short	time_to_eat;
@@ -45,7 +47,6 @@ typedef struct s_monitor
 typedef struct s_philo
 {
 	pthread_t		thread;
-	struct timeval	sit;
 	t_fork			*right_fork;
 	t_fork			*left_fork;
 	unsigned short	id;
@@ -68,5 +69,6 @@ void	safe_free(t_philo *philo);
 
 
 void	print_monitor(t_monitor monitor);
+void activity(long milliseconds, t_monitor *monitor);
 
 #endif

@@ -95,7 +95,22 @@ long	timer(struct timeval start)
 	gettimeofday(&now, NULL);
 	sec = now.tv_sec - start.tv_sec;
 	usec = now.tv_usec - start.tv_usec;
-	return ((sec + usec) / 1e3);
+	return (sec * 1e3 + usec / 1e3);
+}
+
+void	activity(long milliseconds, t_monitor *monitor)
+{
+	struct timeval	start;
+	long			elapsed;
+	
+	elapsed = 0;
+	gettimeofday(&start, NULL);
+	while (!end_getter(monitor) && elapsed < milliseconds)
+	{
+		elapsed = timer(start);
+		if (milliseconds - elapsed > 100)
+			usleep(100);
+	}
 }
 
 void	print_monitor(t_monitor monitor)
