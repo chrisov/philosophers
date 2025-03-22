@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:28:51 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/01/13 13:14:27 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/22 17:08:30 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,42 +97,6 @@ long	timer(struct timeval start)
 	usec = now.tv_usec - start.tv_usec;
 	return (sec * 1e3 + usec / 1e3);
 }
-
-void	activity(long milliseconds, t_monitor *monitor)
-{
-	struct timeval	start;
-	long			elapsed;
-	
-	elapsed = 0;
-	gettimeofday(&start, NULL);
-	while (!end_getter(monitor) && elapsed < milliseconds)
-	{
-		elapsed = timer(start);
-		if (milliseconds - elapsed > 100)
-			usleep(100);
-	}
-}
-
-void	print_monitor(t_monitor monitor)
-{
-	printf("n: %d\n", monitor.n);
-	printf("die: %d\n", monitor.time_to_die);
-	printf("eat: %d\n", monitor.time_to_eat);
-	printf("sleep: %d\n", monitor.time_to_sleep);
-	if (!monitor.end)
-		printf("end: no\n");
-	else
-		printf("end: yes\n");
-	}
-
-/**
- * @brief Prints a custom msg every time it encounters an error.
- */
-// void	err_msg(char *msg)
-// {
-//         printf("%s%s%s\n",RED, msg, RES);
-//         exit(EXIT_FAILURE);
-// }
 
 /**
  * @brief Safe freeing everything.
