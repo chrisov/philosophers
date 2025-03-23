@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:09:10 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/22 12:58:52 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/23 17:42:14 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,23 @@
  */
 static void	param_check(char **arr, int len)
 {
+	int	i;
+
 	if (len != 4 && len != 5)
 	{
 		printf("%sError!%s (Invalid argument)\n", RED, RES);
 		exit(EXIT_FAILURE);
 	}
-	is_valid_integer(arr);
+	i = -1;
+	while (++i < len)
+	{
+		is_valid_integer(arr[i]);
+		if (ft_atoi(arr[i]) < 0)
+		{
+			printf("%sOut of range argument...%s\n", RED, RES);
+			exit(EXIT_FAILURE);
+		}
+	}
 }
 
 int	main(int argc, char **argv)
@@ -34,6 +45,6 @@ int	main(int argc, char **argv)
 	param_check(++argv, --argc);
 	init_data(&philo, &fork, &monitor, argv);
 	dinner(&philo, &monitor);
-	// safe_free(philo);
+	join_n_free(&philo, &monitor, &fork);
 	return (0);
 }

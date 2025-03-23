@@ -9,7 +9,7 @@ OBJDIR = ./obj
 INCDIR = ./include
 
 SRCS = $(SRCDIR)/main.c $(SRCDIR)/functions.c $(SRCDIR)/table.c\
-		$(SRCDIR)/routine.c $(SRCDIR)/more_functions.c
+		$(SRCDIR)/routine.c $(SRCDIR)/more_functions.c $(SRCDIR)/params.c
 
 OBJS = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 NAME = philo
