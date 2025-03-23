@@ -1,0 +1,24 @@
+4 130 60 60 3
+no one should die, simulation should stop after 3 eats
+4 150 70 70 3
+no one should die, simulation should stop after 3 eats
+4 170 80 80 3
+no one should die, simulation should stop after 3 eats
+4 210 100 100 3
+no one should die, simulation should stop after 3 eats
+4 220 110 100 3
+no one should die, simulation should stop after 3 eats
+4 310 150 150 3
+no one should die, simulation should stop after 3 eats
+5 800 200 200 7
+no one should die, simulation should stop after 7 eats
+4 410 200 200 10
+no one should die, simulation should stop after 10 eats
+5 800 200 200 3
+no one should die, simulation should stop after 3 eats
+4 400 150 150 2
+no one should die, simulation should stop after 2 eats
+10 600 300 100 1
+no one should die, simulation should stop after 1 eat
+6 1000 300 500 2
+no one should die, simulation should stop after 2 eats
