@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:09:10 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/24 16:50:44 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/24 18:12:02 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,14 @@ static void	*monitor_routine(t_philo *philo, t_monitor *mon)
 {
 	int			i;
 	int			total_meals;
-	int			last_meal;
+	int			meal_time;
 
 	i = 0;
 	total_meals = 0;
 	while (!bool_getter(&mon->end, &mon->death_mtx))
 	{
-		total_meals += meal_counter(&philo[i], mon, &last_meal);
-		if (timer(mon->sit_time) - last_meal >= mon->time_to_die)
+		total_meals += meal_counter(&philo[i], mon, &meal_time);
+		if (timer(mon->sit_time) - meal_time >= mon->time_to_die)
 		{
 			custom_print(&philo[i], "died");
 			bool_setter(&mon->end, true, &mon->death_mtx);

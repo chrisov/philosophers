@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:28:51 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/24 15:04:09 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/24 18:16:08 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,9 @@ int	ft_atoi(char *str)
 	return ((int)(result * sign));
 }
 
+/**
+ * @brief Sets var's value, locking the provided mutex.
+ */
 void	bool_setter(bool *var, bool value, pthread_mutex_t *mutex)
 {
 	pthread_mutex_lock(mutex);
@@ -64,6 +67,9 @@ void	bool_setter(bool *var, bool value, pthread_mutex_t *mutex)
 	pthread_mutex_unlock(mutex);
 }
 
+/**
+ * @returns Var's value.
+ */
 bool	bool_getter(bool *var, pthread_mutex_t *mutex)
 {
 	bool	res;

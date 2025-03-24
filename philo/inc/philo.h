@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:09:21 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/24 16:44:48 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/24 18:10:03 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ typedef struct s_philo
 }			t_philo;
 
 int		ft_atoi(char *str);
-int		meal_counter(t_philo *philo, t_monitor *mon, int *last_meal);
+int		meal_counter(t_philo *philo, t_monitor *mon, int *meal_num);
 long	timer(struct timeval start);
 bool	forks_pickup(t_philo *philo);
 bool	uwait(long milliseconds, t_monitor **monitor);
