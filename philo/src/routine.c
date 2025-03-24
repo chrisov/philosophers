@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:09:10 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/24 14:44:24 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/24 17:22:31 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,10 @@ static void	*monitor_routine(t_philo *philo)
 		}
 		else if ((mon->n % 2 == 0 && total_meals > mon->n * mon->meals)
 			|| (mon->n % 2 != 0 && total_meals > mon->n * mon->meals + 1))
-			{
-				bool_setter(&mon->end, true, &mon->death_mtx);
-				break ;
-			}
+		{
+			bool_setter(&mon->end, true, &mon->death_mtx);
+			break ;
+		}
 		if (++i == mon->n)
 		{
 			i = 0;
@@ -48,40 +48,6 @@ static void	*monitor_routine(t_philo *philo)
 		}
 	}
 	return (NULL);
-}
-
-/**
- * @returns false if simulation is over, true otherwise
- */
-static bool	forks_pickup(t_philo *philo)
-{
-	if (philo->id % 2 == 0)
-	{
-		pthread_mutex_lock(&philo->right_fork->mtx);
-		philo->right_fork->fork_up = true;
-		if (bool_getter(&philo->monitor->end, &philo->monitor->death_mtx))
-			return (false);
-		custom_print(philo, "has taken a fork");
- 
-		philo->left_fork->fork_up = true;
-		if (bool_getter(&philo->monitor->end, &philo->monitor->death_mtx))
-			return (false);
-		custom_print(philo, "has taken a fork");
-	}
-	else
-	{
-		pthread_mutex_lock(&philo->left_fork->mtx);
-		philo->left_fork->fork_up = true;
-		if (bool_getter(&philo->monitor->end, &philo->monitor->death_mtx))
-			return (false);
-		custom_print(philo, "has taken a fork");
-		pthread_mutex_lock(&philo->right_fork->mtx);
-		philo->right_fork->fork_up = true;
-		if (bool_getter(&philo->monitor->end, &philo->monitor->death_mtx))
-			return (false);
-		custom_print(philo, "has taken a fork");
-	}
-	return (true);
 }
 
 static bool	eating(t_philo *philo)
@@ -120,20 +86,7 @@ static void	*philo_routine(void *arg)
 	{
 		if (!forks_pickup(philo))
 		{
-			if (philo->id % 2 == 0)
-			{
-				pthread_mutex_unlock(&philo->left_fork->mtx);
-				bool_setter(&philo->left_fork->fork_up, false, &philo->left_fork->mtx);
-				pthread_mutex_unlock(&philo->right_fork->mtx);
-				bool_setter(&philo->right_fork->fork_up, false, &philo->right_fork->mtx);
-			}
-			else
-			{
-				pthread_mutex_unlock(&philo->right_fork->mtx);
-				bool_setter(&philo->right_fork->fork_up, false, &philo->right_fork->mtx);
-				pthread_mutex_unlock(&philo->left_fork->mtx);
-				bool_setter(&philo->left_fork->fork_up, false, &philo->left_fork->mtx);
-			}
+			forks_down(philo);
 			break ;
 		}
 		if (bool_getter(&philo->monitor->end, &philo->monitor->death_mtx))
