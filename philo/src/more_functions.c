@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 13:05:42 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/23 16:54:57 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/24 14:46:17 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,10 @@ void	activity(long milliseconds, t_monitor **monitor)
 
 	elapsed = 0;
 	gettimeofday(&start, NULL);
-	while (!bool_getter((*monitor)->end, &(*monitor)->death_mtx) && elapsed < milliseconds)
+	while (elapsed < milliseconds)
 	{
+		if (bool_getter(&(*monitor)->end, &(*monitor)->death_mtx))
+			break ;
 		elapsed = timer(start);
 		if (milliseconds - elapsed > 100)
 			usleep(100);
@@ -68,7 +70,7 @@ void	join_n_free(t_philo **philo, t_monitor **monitor, t_fork **fork_node)
 
 	i = -1;
 	while (++i < (*monitor)->n)
-		pthread_join((*philo[i]).thread, NULL);
+		pthread_join((*philo)[i].thread, NULL);
 	free_circular_list(fork_node, (*monitor)->n);
 	free(*philo);
 	*philo = NULL;

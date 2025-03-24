@@ -1,7 +1,7 @@
 #
 #
 CC = cc
-CFLAGS = -g -pthread -Wall -Werror -Wextra -I$(INCDIR)
+CFLAGS = -g -pthread -Wall -Werror -Wextra -I$(INCDIR) -fsanitize=thread
 MAKEFLAGS += -s
 
 SRCDIR = ./src

@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:28:51 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/23 17:23:07 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/24 14:30:22 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@ void	bool_setter(bool *var, bool value, pthread_mutex_t *mutex)
 	pthread_mutex_unlock(mutex);
 }
 
-bool	bool_getter(bool var, pthread_mutex_t *mutex)
+bool	bool_getter(bool *var, pthread_mutex_t *mutex)
 {
 	bool	res;
 
 	pthread_mutex_lock(mutex);
-	res = var;
+	res = *var;
 	pthread_mutex_unlock(mutex);
 	return (res);
 }

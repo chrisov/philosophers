@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:09:21 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/23 17:41:51 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/24 14:30:31 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int		ft_atoi(char *str);
 long	timer(struct timeval start);
 
 void	bool_setter(bool *var, bool value, pthread_mutex_t *mutex);
-bool	bool_getter(bool var, pthread_mutex_t *mutex);
+bool	bool_getter(bool *var, pthread_mutex_t *mutex);
 
 void	activity(long milliseconds, t_monitor **monitor);
 void	custom_print(t_philo *philo, char *msg);
