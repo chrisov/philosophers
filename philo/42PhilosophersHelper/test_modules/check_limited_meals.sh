@@ -39,7 +39,7 @@ check_limited_meals()
         echo "Testing limited meals input: $line"
         output=$($1 $line 2>&1)
         exit_code=$?
-
+    
         # Count occurrences of "is eating"
         local eat_count=$(echo "$output" | grep -c "is eating")
 		# printf "Eating count: $eat_count\n"

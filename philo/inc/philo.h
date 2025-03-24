@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:09:21 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/24 17:18:57 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/24 20:12:42 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,16 @@ typedef struct s_philo
 	bool			full;
 }			t_philo;
 
-void	is_valid_integer(char *str);
 int		ft_atoi(char *str);
+int		meal_counter(t_philo *philo, t_monitor *mon, int *meal_num);
 long	timer(struct timeval start);
-void	bool_setter(bool *var, bool value, pthread_mutex_t *mutex);
-bool	bool_getter(bool *var, pthread_mutex_t *mutex);
-void	activity(long milliseconds, t_monitor **monitor);
+bool	forks_pickup(t_philo *philo);
+bool	uwait(long milliseconds, t_monitor **monitor);
 bool	custom_print(t_philo *philo, char *msg);
+bool	bool_getter(bool *var, pthread_mutex_t *mutex);
+void	bool_setter(bool *var, bool value, pthread_mutex_t *mutex);
+void	is_valid_integer(char *str);
+void	*forks_down(t_philo *philo);
 void	init_data(t_philo **philo, t_fork **fork, t_monitor **mon, char **argv);
 void	dinner(t_philo **philo, t_monitor **monitor);
 void	join_n_free(t_philo **philo, t_monitor **monitor, t_fork **fork_node);
