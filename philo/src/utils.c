@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 17:22:59 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/24 17:01:27 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/24 17:23:33 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,33 +46,21 @@ void	*forks_down(t_philo *philo)
 {
 	if (philo->id % 2 == 0)
 	{
-		if (bool_getter(&philo->left_fork->fork_up, &philo->left_fork->mtx))
-		{
-			pthread_mutex_unlock(&philo->left_fork->mtx);
-			bool_setter(&philo->left_fork->fork_up, false,
-				&philo->left_fork->mtx);
-		}
-		if (bool_getter(&philo->right_fork->fork_up, &philo->right_fork->mtx))
-		{
-			pthread_mutex_unlock(&philo->right_fork->mtx);
-			bool_setter(&philo->right_fork->fork_up, false,
-				&philo->right_fork->mtx);
-		}
+		pthread_mutex_unlock(&philo->left_fork->mtx);
+		bool_setter(&philo->left_fork->fork_up, false,
+			&philo->left_fork->mtx);
+		pthread_mutex_unlock(&philo->right_fork->mtx);
+		bool_setter(&philo->right_fork->fork_up, false,
+			&philo->right_fork->mtx);
 	}
 	else
 	{
-		if (bool_getter(&philo->right_fork->fork_up, &philo->right_fork->mtx))
-		{
-			pthread_mutex_unlock(&philo->right_fork->mtx);
-			bool_setter(&philo->right_fork->fork_up, false,
-				&philo->right_fork->mtx);
-		}
-		if (bool_getter(&philo->left_fork->fork_up, &philo->left_fork->mtx))
-		{
-			pthread_mutex_unlock(&philo->left_fork->mtx);
-			bool_setter(&philo->left_fork->fork_up, false,
-				&philo->left_fork->mtx);
-		}
+		pthread_mutex_unlock(&philo->right_fork->mtx);
+		bool_setter(&philo->right_fork->fork_up, false,
+			&philo->right_fork->mtx);
+		pthread_mutex_unlock(&philo->left_fork->mtx);
+		bool_setter(&philo->left_fork->fork_up, false,
+			&philo->left_fork->mtx);
 	}
 	return (NULL);
 }
