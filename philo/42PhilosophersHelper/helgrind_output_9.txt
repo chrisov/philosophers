@@ -1,1 +1,0 @@
-valgrind: ../philo: cannot execute binary file
