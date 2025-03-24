@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 13:05:42 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/24 20:12:26 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/24 20:31:18 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ bool	custom_print(t_philo *philo, char *msg)
 	pthread_mutex_lock(&mon->print_mtx);
 	printf("%ld %d %s\n", timer(mon->sit_time), philo->id, msg);
 	pthread_mutex_unlock(&mon->print_mtx);
+	if (bool_getter(&mon->end, &mon->death_mtx))
+		return (false);
 	return (true);
 }
 
@@ -37,8 +39,6 @@ bool	uwait(long milliseconds, t_monitor **monitor)
 		if (bool_getter(&(*monitor)->end, &(*monitor)->death_mtx))
 			return (false);
 		elapsed = timer(start);
-		if (milliseconds - elapsed > 100)
-			usleep(100);
 	}
 	return (true);
 }
