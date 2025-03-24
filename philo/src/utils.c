@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 17:22:59 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/24 19:27:32 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/24 20:08:07 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,9 @@ void	*forks_down(t_philo *philo)
 	}
 	else
 	{
-		if (philo->right_fork)
-		{
-			pthread_mutex_unlock(&philo->right_fork->mtx);
-			bool_setter(&philo->right_fork->fork_up, false,
-				&philo->right_fork->mtx);
-		}
+		pthread_mutex_unlock(&philo->right_fork->mtx);
+		bool_setter(&philo->right_fork->fork_up, false,
+			&philo->right_fork->mtx);
 		if (philo->left_fork)
 		{
 			pthread_mutex_unlock(&philo->left_fork->mtx);
