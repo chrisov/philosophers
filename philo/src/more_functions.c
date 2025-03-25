@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 13:05:42 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/24 20:31:18 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/25 11:50:40 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,16 +68,14 @@ static void	free_circular_list(t_fork **head, int n)
 	*head = NULL;
 }
 
-void	join_n_free(t_philo **philo, t_monitor **monitor, t_fork **fork_node)
+void	join_n_free(t_philo *philo, t_monitor **monitor, t_fork **fork_node)
 {
 	int		i;
 
 	i = -1;
 	while (++i < (*monitor)->n)
-		pthread_join((*philo)[i].thread, NULL);
+		pthread_join(philo[i].thread, NULL);
 	free_circular_list(fork_node, (*monitor)->n);
-	free(*philo);
-	*philo = NULL;
 	pthread_mutex_destroy(&(*monitor)->death_mtx);
 	pthread_mutex_destroy(&(*monitor)->print_mtx);
 	pthread_mutex_destroy(&(*monitor)->meals_mtx);

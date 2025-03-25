@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:09:10 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/24 20:10:56 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/25 11:48:23 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ static void	*philo_routine(void *arg)
 	return (NULL);
 }
 
-void	dinner(t_philo **philo, t_monitor **monitor)
+void	dinner(t_philo *philo, t_monitor **monitor)
 {
 	int				i;
 	struct timeval	time;
@@ -93,6 +93,6 @@ void	dinner(t_philo **philo, t_monitor **monitor)
 	gettimeofday(&time, NULL);
 	(*monitor)->sit_time = time;
 	while (++i < (*monitor)->n)
-		pthread_create(&(*philo)[i].thread, NULL, philo_routine, &(*philo)[i]);
-	monitor_routine(*philo, *monitor);
+		pthread_create(&philo[i].thread, NULL, philo_routine, &philo[i]);
+	monitor_routine(philo, *monitor);
 }

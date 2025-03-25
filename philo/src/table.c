@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:28:51 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/24 19:24:20 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/25 11:47:44 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,13 +83,13 @@ static t_monitor	*monitor_init(char **param)
 	return (monitor);
 }
 
-static t_philo	*philos_init(t_fork *fork, t_monitor *monitor)
+static t_philo	*philos_init(t_philo *philos, t_fork *fork, t_monitor *monitor)
 {
-	t_philo	*philos;
+	// t_philo	*philos;
 	int		i;
 
-	philos = safe_malloc(monitor->n * sizeof(t_philo),
-			"Error allocating philos");
+	// philos = safe_malloc(monitor->n * sizeof(t_philo),
+	// 		"Error allocating philos");
 	i = -1;
 	while (++i < monitor->n)
 	{
@@ -108,9 +108,9 @@ static t_philo	*philos_init(t_fork *fork, t_monitor *monitor)
 	return (philos);
 }
 
-void	init_data(t_philo **philo, t_fork **fork, t_monitor **mon, char **argv)
+void	init_data(t_philo *philo, t_fork **fork, t_monitor **mon, char **argv)
 {
 	*fork = forks_init(argv[0]);
 	*mon = monitor_init(argv);
-	*philo = philos_init(*fork, *mon);
+	philos_init(philo, *fork, *mon);
 }
