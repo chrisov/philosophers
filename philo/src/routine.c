@@ -6,82 +6,35 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:09:10 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/24 14:44:24 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/25 12:49:19 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philo.h"
 
-static void	*monitor_routine(t_philo *philo)
+static void	monitor_routine(t_philo *philo, t_monitor *mon)
 {
 	int			i;
-	t_monitor	*mon;
 	int			total_meals;
 	int			last_meal;
 
 	i = 0;
-	mon = philo[i].monitor;
 	total_meals = 0;
 	while (1)
 	{
-		mon = philo[i].monitor;
-		pthread_mutex_lock(&mon->meals_mtx);
-		last_meal = philo[i].last_meal_time;
-		total_meals += philo[i].meals_eaten;
-		pthread_mutex_unlock(&mon->meals_mtx);
+		total_meals += meal_counter(&philo[i], mon, &last_meal);
 		if (timer(mon->sit_time) - last_meal >= mon->time_to_die)
-		{
-			custom_print(&philo[i], "died");
-			bool_setter(&mon->end, true, &mon->death_mtx);
-			break ;
-		}
+			return ((void)(custom_print(&philo[i], "died")),
+				bool_setter(&mon->end, true, &mon->death_mtx));
 		else if ((mon->n % 2 == 0 && total_meals > mon->n * mon->meals)
 			|| (mon->n % 2 != 0 && total_meals > mon->n * mon->meals + 1))
-			{
-				bool_setter(&mon->end, true, &mon->death_mtx);
-				break ;
-			}
+			return (bool_setter(&mon->end, true, &mon->death_mtx));
 		if (++i == mon->n)
 		{
 			i = 0;
 			total_meals = 0;
 		}
 	}
-	return (NULL);
-}
-
-/**
- * @returns false if simulation is over, true otherwise
- */
-static bool	forks_pickup(t_philo *philo)
-{
-	if (philo->id % 2 == 0)
-	{
-		pthread_mutex_lock(&philo->right_fork->mtx);
-		philo->right_fork->fork_up = true;
-		if (bool_getter(&philo->monitor->end, &philo->monitor->death_mtx))
-			return (false);
-		custom_print(philo, "has taken a fork");
- 
-		philo->left_fork->fork_up = true;
-		if (bool_getter(&philo->monitor->end, &philo->monitor->death_mtx))
-			return (false);
-		custom_print(philo, "has taken a fork");
-	}
-	else
-	{
-		pthread_mutex_lock(&philo->left_fork->mtx);
-		philo->left_fork->fork_up = true;
-		if (bool_getter(&philo->monitor->end, &philo->monitor->death_mtx))
-			return (false);
-		custom_print(philo, "has taken a fork");
-		pthread_mutex_lock(&philo->right_fork->mtx);
-		philo->right_fork->fork_up = true;
-		if (bool_getter(&philo->monitor->end, &philo->monitor->death_mtx))
-			return (false);
-		custom_print(philo, "has taken a fork");
-	}
-	return (true);
 }
 
 static bool	eating(t_philo *philo)
@@ -96,7 +49,7 @@ static bool	eating(t_philo *philo)
 	philo->meals_eaten++;
 	pthread_mutex_unlock(&monitor->meals_mtx);
 	custom_print(philo, "is eating");
-	activity(philo->monitor->time_to_eat, &philo->monitor);
+	uwait(philo->monitor->time_to_eat, &philo->monitor);
 	pthread_mutex_unlock(&philo->right_fork->mtx);
 	pthread_mutex_unlock(&philo->left_fork->mtx);
 	return (true);
@@ -114,26 +67,13 @@ static void	*philo_routine(void *arg)
 	if (philo->id % 2 != 0)
 	{
 		custom_print(philo, "is thinking");
-		activity(philo->monitor->time_to_sleep / 2, &philo->monitor);
+		uwait(philo->monitor->time_to_sleep / 2, &philo->monitor);
 	}
 	while (1)
 	{
 		if (!forks_pickup(philo))
 		{
-			if (philo->id % 2 == 0)
-			{
-				pthread_mutex_unlock(&philo->left_fork->mtx);
-				bool_setter(&philo->left_fork->fork_up, false, &philo->left_fork->mtx);
-				pthread_mutex_unlock(&philo->right_fork->mtx);
-				bool_setter(&philo->right_fork->fork_up, false, &philo->right_fork->mtx);
-			}
-			else
-			{
-				pthread_mutex_unlock(&philo->right_fork->mtx);
-				bool_setter(&philo->right_fork->fork_up, false, &philo->right_fork->mtx);
-				pthread_mutex_unlock(&philo->left_fork->mtx);
-				bool_setter(&philo->left_fork->fork_up, false, &philo->left_fork->mtx);
-			}
+			forks_down(philo);
 			break ;
 		}
 		if (bool_getter(&philo->monitor->end, &philo->monitor->death_mtx))
@@ -145,22 +85,12 @@ static void	*philo_routine(void *arg)
 		custom_print(philo, "is sleeping");
 		if (bool_getter(&philo->monitor->end, &philo->monitor->death_mtx))
 			break ;
-		activity(philo->monitor->time_to_sleep, &philo->monitor);
+		uwait(philo->monitor->time_to_sleep, &philo->monitor);
 		if (bool_getter(&philo->monitor->end, &philo->monitor->death_mtx))
 			break ;
 		custom_print(philo, "is thinking");
-		activity(2, &philo->monitor);
+		uwait(2, &philo->monitor);
 	}
-	// if (bool_getter(philo->right_fork->fork_up, &philo->right_fork->mtx))
-	// {
-	// 	bool_setter(&philo->right_fork->fork_up, false, &philo->right_fork->mtx);
-	// 	pthread_mutex_unlock(&philo->right_fork->mtx);
-	// }
-	// if (bool_getter(philo->left_fork->fork_up, &philo->left_fork->mtx))
-	// {
-	// 	bool_setter(&philo->left_fork->fork_up, false, &philo->left_fork->mtx);
-	// 	pthread_mutex_unlock(&philo->left_fork->mtx);
-	// }
 	return (NULL);
 }
 
@@ -174,5 +104,5 @@ void	dinner(t_philo **philo, t_monitor **monitor)
 	(*monitor)->sit_time = time;
 	while (++i < (*monitor)->n)
 		pthread_create(&(*philo)[i].thread, NULL, philo_routine, &(*philo)[i]);
-	monitor_routine(*philo);
+	monitor_routine(*philo, *monitor);
 }

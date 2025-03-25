@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:09:21 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/24 14:30:31 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/25 12:49:19 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,14 @@ long	timer(struct timeval start);
 void	bool_setter(bool *var, bool value, pthread_mutex_t *mutex);
 bool	bool_getter(bool *var, pthread_mutex_t *mutex);
 
-void	activity(long milliseconds, t_monitor **monitor);
-void	custom_print(t_philo *philo, char *msg);
+void	uwait(long milliseconds, t_monitor **monitor);
 void	init_data(t_philo **philo, t_fork **fork, t_monitor **mon, char **argv);
 void	dinner(t_philo **philo, t_monitor **monitor);
 void	join_n_free(t_philo **philo, t_monitor **monitor, t_fork **fork_node);
+
+int	meal_counter(t_philo *philo, t_monitor *mon, int *meal_time);
+bool	custom_print(t_philo *philo, char *msg);
+bool	forks_pickup(t_philo *philo);
+void	*forks_down(t_philo *philo);
 
 #endif
