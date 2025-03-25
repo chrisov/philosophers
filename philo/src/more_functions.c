@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 13:05:42 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/25 12:52:11 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/25 13:02:04 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ bool	custom_print(t_philo *philo, char *msg)
 	return (true);
 }
 
-void	uwait(long milliseconds, t_monitor **monitor)
+bool	uwait(long milliseconds, t_monitor **monitor)
 {
 	struct timeval	start;
 	long			elapsed;
@@ -37,11 +37,12 @@ void	uwait(long milliseconds, t_monitor **monitor)
 	while (elapsed < milliseconds)
 	{
 		if (bool_getter(&(*monitor)->end, &(*monitor)->death_mtx))
-			break ;
+			return (false);
 		elapsed = timer(start);
 		if (milliseconds - elapsed > 100)
 			usleep(100);
 	}
+	return (true);
 }
 
 static void	free_circular_list(t_fork **head, int n)

@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:09:10 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/25 12:49:19 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/25 13:15:45 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,16 +43,18 @@ static bool	eating(t_philo *philo)
 
 	monitor = philo->monitor;
 	if (bool_getter(&monitor->end, &monitor->death_mtx))
-		return (false);
+		return (pthread_mutex_unlock(&philo->right_fork->mtx),
+			pthread_mutex_unlock(&philo->left_fork->mtx), false);
 	pthread_mutex_lock(&monitor->meals_mtx);
 	philo->last_meal_time = timer(monitor->sit_time);
 	philo->meals_eaten++;
 	pthread_mutex_unlock(&monitor->meals_mtx);
-	custom_print(philo, "is eating");
+	if (!custom_print(philo, "is eating"))
+		return (pthread_mutex_unlock(&philo->right_fork->mtx),
+			pthread_mutex_unlock(&philo->left_fork->mtx), false);
 	uwait(philo->monitor->time_to_eat, &philo->monitor);
-	pthread_mutex_unlock(&philo->right_fork->mtx);
-	pthread_mutex_unlock(&philo->left_fork->mtx);
-	return (true);
+	return (pthread_mutex_unlock(&philo->right_fork->mtx),
+		pthread_mutex_unlock(&philo->left_fork->mtx), true);
 }
 
 /**
@@ -73,22 +75,16 @@ static void	*philo_routine(void *arg)
 	{
 		if (!forks_pickup(philo))
 		{
-			forks_down(philo);
+			pthread_mutex_unlock(&philo->right_fork->mtx);
+			if (philo->left_fork)
+				pthread_mutex_unlock(&philo->left_fork->mtx);
 			break ;
 		}
-		if (bool_getter(&philo->monitor->end, &philo->monitor->death_mtx))
+		if (!eating(philo) || !custom_print(philo, "is sleeping"))
 			break ;
-		if (!eating(philo))
+		if (!uwait(philo->monitor->time_to_sleep, &philo->monitor)
+			|| !custom_print(philo, "is thinking"))
 			break ;
-		if (bool_getter(&philo->monitor->end, &philo->monitor->death_mtx))
-			break ;
-		custom_print(philo, "is sleeping");
-		if (bool_getter(&philo->monitor->end, &philo->monitor->death_mtx))
-			break ;
-		uwait(philo->monitor->time_to_sleep, &philo->monitor);
-		if (bool_getter(&philo->monitor->end, &philo->monitor->death_mtx))
-			break ;
-		custom_print(philo, "is thinking");
 		uwait(2, &philo->monitor);
 	}
 	return (NULL);
