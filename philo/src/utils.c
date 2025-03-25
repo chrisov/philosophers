@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 17:22:59 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/25 13:06:02 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/25 13:40:49 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,31 +51,31 @@ bool	forks_pickup(t_philo *philo)
  * @brief Set down a philo's forks, with the opposite order of how they got
  * picked up.
  */
-// void	*forks_down(t_philo *philo)
-// {
-// 	if (philo->id % 2 == 0)
-// 	{
-// 		bool_setter(&philo->left_fork->fork_up, false,
-// 			&philo->left_fork->mtx);
-// 		pthread_mutex_unlock(&philo->left_fork->mtx);
-// 		pthread_mutex_unlock(&philo->right_fork->mtx);
-// 		bool_setter(&philo->right_fork->fork_up, false,
-// 			&philo->right_fork->mtx);
-// 	}
-// 	else
-// 	{
-// 		pthread_mutex_unlock(&philo->right_fork->mtx);
-// 		bool_setter(&philo->right_fork->fork_up, false,
-// 			&philo->right_fork->mtx);
-// 		if (philo->left_fork)
-// 		{
-// 			pthread_mutex_unlock(&philo->left_fork->mtx);
-// 			bool_setter(&philo->left_fork->fork_up, false,
-// 				&philo->left_fork->mtx);
-// 		}
-// 	}
-// 	return (NULL);
-// }
+void	*forks_down(t_philo *philo)
+{
+	if (philo->id % 2 == 0)
+	{
+		bool_setter(&philo->left_fork->fork_up, false,
+			&philo->left_fork->mtx);
+		pthread_mutex_unlock(&philo->left_fork->mtx);
+		pthread_mutex_unlock(&philo->right_fork->mtx);
+		bool_setter(&philo->right_fork->fork_up, false,
+			&philo->right_fork->mtx);
+	}
+	else
+	{
+		pthread_mutex_unlock(&philo->right_fork->mtx);
+		bool_setter(&philo->right_fork->fork_up, false,
+			&philo->right_fork->mtx);
+		if (philo->left_fork)
+		{
+			pthread_mutex_unlock(&philo->left_fork->mtx);
+			bool_setter(&philo->left_fork->fork_up, false,
+				&philo->left_fork->mtx);
+		}
+	}
+	return (NULL);
+}
 
 /**
  * @brief Updates the values of meal time and 

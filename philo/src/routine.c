@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:09:10 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/25 13:15:45 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/25 13:52:03 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ static bool	eating(t_philo *philo)
 	if (bool_getter(&monitor->end, &monitor->death_mtx))
 		return (pthread_mutex_unlock(&philo->right_fork->mtx),
 			pthread_mutex_unlock(&philo->left_fork->mtx), false);
+		// return (forks_down(philo), false);
 	pthread_mutex_lock(&monitor->meals_mtx);
 	philo->last_meal_time = timer(monitor->sit_time);
 	philo->meals_eaten++;
@@ -52,9 +53,11 @@ static bool	eating(t_philo *philo)
 	if (!custom_print(philo, "is eating"))
 		return (pthread_mutex_unlock(&philo->right_fork->mtx),
 			pthread_mutex_unlock(&philo->left_fork->mtx), false);
+		// return (forks_down(philo), false);
 	uwait(philo->monitor->time_to_eat, &philo->monitor);
 	return (pthread_mutex_unlock(&philo->right_fork->mtx),
 		pthread_mutex_unlock(&philo->left_fork->mtx), true);
+	// return (forks_down(philo), true);
 }
 
 /**
@@ -75,9 +78,17 @@ static void	*philo_routine(void *arg)
 	{
 		if (!forks_pickup(philo))
 		{
-			pthread_mutex_unlock(&philo->right_fork->mtx);
-			if (philo->left_fork)
+			if (philo->right_fork && philo->right_fork->fork_up)
+			{
+				philo->right_fork->fork_up = false;
+				pthread_mutex_unlock(&philo->right_fork->mtx);
+			}
+			if (philo->left_fork && philo->left_fork->fork_up)
+			{
+				philo->left_fork->fork_up = false;
 				pthread_mutex_unlock(&philo->left_fork->mtx);
+			}
+			// forks_down(philo);
 			break ;
 		}
 		if (!eating(philo) || !custom_print(philo, "is sleeping"))

@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:28:51 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/23 15:53:05 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/25 13:17:44 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,14 @@ static t_fork	*forks_init(char *param)
 	t_fork	*current;
 	int		i;
 
-	i = 1;
 	fork_head = safe_malloc(sizeof(t_fork), "Error allocating fork");
 	fork_head->fork_up = false;
 	if (pthread_mutex_init(&fork_head->mtx, NULL) != 0)
 		return (printf("Mutex init failed\n"), NULL);
+	fork_head->next = NULL;
 	current = fork_head;
-	while (++i < ft_atoi(param) + 1)
+	i = 0;
+	while (++i < ft_atoi(param))
 	{
 		current->next = safe_malloc(sizeof(t_fork), "Error allocating fork");
 		current = current->next;
@@ -51,7 +52,8 @@ static t_fork	*forks_init(char *param)
 			return (printf("Fork mutex init failed\n"), NULL);
 		current->next = NULL;
 	}
-	current->next = fork_head;
+	if (ft_atoi(param) > 1)
+		current->next = fork_head;
 	return (fork_head);
 }
 

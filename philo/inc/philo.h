@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:09:21 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/25 13:06:20 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/25 13:40:54 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,6 @@ void	join_n_free(t_philo **philo, t_monitor **monitor, t_fork **fork_node);
 int	meal_counter(t_philo *philo, t_monitor *mon, int *meal_time);
 bool	custom_print(t_philo *philo, char *msg);
 bool	forks_pickup(t_philo *philo);
-// void	*forks_down(t_philo *philo);
+void	*forks_down(t_philo *philo);
 
 #endif

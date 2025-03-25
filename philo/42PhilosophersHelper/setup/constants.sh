@@ -1,8 +1,8 @@
 
 # check_timestamps
 readonly MINI_PHILOS=30
-readonly MAX_PHILOS=40
-readonly STEP=1
+readonly MAX_PHILOS=200
+readonly STEP=10
 readonly TIME_TO_DIE=400
 readonly TIME_TO_EAT=100
 readonly TIME_TO_SLEEP=100
