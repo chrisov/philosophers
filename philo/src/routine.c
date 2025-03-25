@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:09:10 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/25 15:06:41 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/25 17:01:58 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,22 +37,30 @@ static void	monitor_routine(t_philo *philo, t_monitor *mon)
 	}
 }
 
-static bool	eating(t_philo *philo)
+static bool	eating(t_philo *philo, int *fork_count)
 {
 	t_monitor	*monitor;
 
 	monitor = philo->monitor;
 	if (bool_getter(&monitor->end, &monitor->death_mtx))
-		return (forks_down(philo), false);
-	pthread_mutex_lock(&monitor->meals_mtx);
-	philo->last_meal_time = timer(monitor->sit_time);
-	philo->meals_eaten++;
-	pthread_mutex_unlock(&monitor->meals_mtx);
-	if (!custom_print(philo, "is eating"))
-		return (forks_down(philo), false);
-	uwait(philo->monitor->time_to_eat, &philo->monitor);
-	return (pthread_mutex_unlock(&philo->right_fork->mtx),
-		pthread_mutex_unlock(&philo->left_fork->mtx), true);
+		return (forks_down(philo, fork_count), false);
+	if (bool_getter(&philo->r_fork->up, &philo->r_fork->mtx)
+		&& bool_getter(&philo->l_fork->up, &philo->l_fork->mtx))
+	{
+		pthread_mutex_lock(&monitor->meals_mtx);
+		philo->last_meal_time = timer(monitor->sit_time);
+		philo->meals_eaten++;
+		pthread_mutex_unlock(&monitor->meals_mtx);
+		if (!custom_print(philo, "is eating"))
+			return (forks_down(philo, fork_count), false);
+		uwait(philo->monitor->time_to_eat, &philo->monitor);
+		bool_setter(&philo->r_fork->up, false, &philo->r_fork->mtx);
+		(*fork_count)--;
+		bool_setter(&philo->l_fork->up, false, &philo->l_fork->mtx);
+		(*fork_count)--;
+		return (true);
+	}
+	return (forks_down(philo, fork_count), false);
 }
 
 /**
@@ -62,6 +70,8 @@ static bool	eating(t_philo *philo)
 static void	*philo_routine(void *arg)
 {
 	t_philo	*philo;
+	int		count_f;
+
 
 	philo = (t_philo *)arg;
 	if (philo->id % 2 != 0)
@@ -69,19 +79,23 @@ static void	*philo_routine(void *arg)
 		custom_print(philo, "is thinking");
 		uwait(philo->monitor->time_to_sleep / 2, &philo->monitor);
 	}
+	count_f = 0;
 	while (1)
 	{
-		if (!forks_pickup(philo))
+		count_f += forks_pickup(philo);
+		if (!count_f)
+			break ;
+		custom_print(philo, "1 fork");
+		if (count_f == 2)
 		{
-			forks_down(philo);
-			break ;
+			if (!eating(philo, &count_f) || !custom_print(philo, "is sleeping")
+				|| !uwait(philo->monitor->time_to_sleep, &philo->monitor))
+				break ;
+			if (!custom_print(philo, "is thinking"))
+				break ;
+			uwait(7, &philo->monitor);
+			custom_print(philo, ft_itoa(count_f));
 		}
-		if (!eating(philo) || !custom_print(philo, "is sleeping"))
-			break ;
-		if (!uwait(philo->monitor->time_to_sleep, &philo->monitor)
-			|| !custom_print(philo, "is thinking"))
-			break ;
-		uwait(2, &philo->monitor);
 	}
 	return (NULL);
 }

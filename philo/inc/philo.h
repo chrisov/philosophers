@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:09:21 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/25 13:40:54 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/25 16:56:32 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 typedef struct s_fork
 {
 	pthread_mutex_t	mtx;
-	bool			fork_up;
+	bool			up;
 	struct s_fork	*next;
 }			t_fork;
 
@@ -52,8 +52,8 @@ typedef struct s_philo
 	unsigned short	id;
 	unsigned short	meals_eaten;
 	unsigned long	last_meal_time;
-	t_fork			*right_fork;
-	t_fork			*left_fork;
+	t_fork			*r_fork;
+	t_fork			*l_fork;
 	t_monitor		*monitor;
 	bool			full;
 }			t_philo;
@@ -72,7 +72,10 @@ void	join_n_free(t_philo **philo, t_monitor **monitor, t_fork **fork_node);
 
 int	meal_counter(t_philo *philo, t_monitor *mon, int *meal_time);
 bool	custom_print(t_philo *philo, char *msg);
-bool	forks_pickup(t_philo *philo);
-void	*forks_down(t_philo *philo);
+int		forks_pickup(t_philo *philo);
+void	*forks_down(t_philo *philo, int *fork_count);
+
+
+char	*ft_itoa(int n);
 
 #endif

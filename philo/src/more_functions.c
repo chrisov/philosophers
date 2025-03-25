@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 13:05:42 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/25 13:02:04 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/25 16:59:06 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,20 @@ bool	uwait(long milliseconds, t_monitor **monitor)
 			usleep(100);
 	}
 	return (true);
+}
+
+/**
+ * @brief Updates the values of meal time and 
+ */
+int	meal_counter(t_philo *philo, t_monitor *mon, int *meal_time)
+{
+	int	count;
+
+	pthread_mutex_lock(&mon->meals_mtx);
+	*meal_time = philo->last_meal_time;
+	count = philo->meals_eaten;
+	pthread_mutex_unlock(&mon->meals_mtx);
+	return (count);
 }
 
 static void	free_circular_list(t_fork **head, int n)
