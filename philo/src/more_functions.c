@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 13:05:42 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/25 16:59:06 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/25 20:02:41 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@ bool	custom_print(t_philo *philo, char *msg)
 {
 	t_monitor	*mon;
 
-	if (bool_getter(&philo->monitor->end, &philo->monitor->death_mtx))
-		return (false);
 	mon = philo->monitor;
+	if (bool_getter(&mon->end, &mon->death_mtx))
+		return (false);
 	pthread_mutex_lock(&mon->print_mtx);
 	printf("%ld %d %s\n", timer(mon->sit_time), philo->id, msg);
 	pthread_mutex_unlock(&mon->print_mtx);
-	if (bool_getter(&philo->monitor->end, &philo->monitor->death_mtx))
+	if (bool_getter(&mon->end, &mon->death_mtx))
 		return (false);
 	return (true);
 }
