@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 17:22:59 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/26 10:28:42 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/26 14:47:36 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,5 +78,17 @@ void	forks_down(t_philo *philo, int *fork_count)
 	{
 		single_fork_down(philo->r_fork, fork_count);
 		single_fork_down(philo->l_fork, fork_count);
+	}
+}
+
+/**
+ * @brief Makes odd number of philos to think at the beginning of the sim
+ */
+void	philo_init(t_philo *philo)
+{
+	if (philo->id % 2 != 0)
+	{
+		custom_print(philo, "is thinking");
+		uwait(philo->monitor->time_to_sleep / 2, &philo->monitor);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:28:51 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/25 16:23:21 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/26 14:48:31 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,8 @@ static t_monitor	*monitor_init(char **param)
 
 static t_philo	*philos_init(t_fork *fork, t_monitor *monitor)
 {
-	t_philo	*philos;
-	int		i;
+	t_philo			*philos;
+	unsigned int	i;
 
 	philos = safe_malloc(monitor->n * sizeof(t_philo),
 			"Error allocating philos");

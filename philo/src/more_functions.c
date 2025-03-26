@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 13:05:42 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/25 20:02:41 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/26 14:48:58 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,9 @@ bool	custom_print(t_philo *philo, char *msg)
 	t_monitor	*mon;
 
 	mon = philo->monitor;
-	if (bool_getter(&mon->end, &mon->death_mtx))
-		return (false);
 	pthread_mutex_lock(&mon->print_mtx);
 	printf("%ld %d %s\n", timer(mon->sit_time), philo->id, msg);
 	pthread_mutex_unlock(&mon->print_mtx);
-	if (bool_getter(&mon->end, &mon->death_mtx))
-		return (false);
 	return (true);
 }
 
@@ -34,21 +30,20 @@ bool	uwait(long milliseconds, t_monitor **monitor)
 
 	elapsed = 0;
 	gettimeofday(&start, NULL);
-	while (elapsed < milliseconds)
+	while (!bool_getter(&(*monitor)->end, &(*monitor)->death_mtx))
 	{
-		if (bool_getter(&(*monitor)->end, &(*monitor)->death_mtx))
-			return (false);
 		elapsed = timer(start);
-		if (milliseconds - elapsed > 100)
-			usleep(100);
+		if (elapsed > milliseconds)
+			return (true);
+		usleep(100);
 	}
-	return (true);
+	return (false);
 }
 
 /**
  * @brief Updates the values of meal time and 
  */
-int	meal_counter(t_philo *philo, t_monitor *mon, int *meal_time)
+int	meal_counter(t_philo *philo, t_monitor *mon, unsigned int *meal_time)
 {
 	int	count;
 
@@ -86,7 +81,7 @@ static void	free_circular_list(t_fork **head, int n)
 
 void	join_n_free(t_philo **philo, t_monitor **monitor, t_fork **fork_node)
 {
-	int		i;
+	unsigned int	i;
 
 	i = -1;
 	while (++i < (*monitor)->n)
