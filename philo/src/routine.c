@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:09:10 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/25 20:55:13 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/26 10:35:19 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static void	*monitor_routine(t_philo *philo, t_monitor *mon)
 			i = 0;
 			total_meals = 0;
 		}
-		usleep(25);
+		usleep(100);
 	}
 }
 
@@ -88,7 +88,7 @@ static void	*philo_routine(void *arg)
 	while (!bool_getter(&philo->monitor->end, &philo->monitor->death_mtx))
 	{
 		count_f += forks_pickup(philo);
-		if (count_f == -1)
+		if (count_f < 0)
 			return (forks_down(philo, &count_f), NULL);
 		if (count_f == 2)
 		{

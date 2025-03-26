@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 17:22:59 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/25 20:31:32 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/26 10:28:42 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,10 @@ static void	single_fork_down(t_fork *fork, int *count)
 }
 
 /**
- * @returns False if simulation is over, true otherwise
- * 
  * @brief Makes even-id philos to pickup the right fork first, the other way
  * around for the left-id ones.
+ * 
+ * @returns The number of picked up forks, -3 in case of a philo's death
  */
 int	forks_pickup(t_philo *philo)
 {
@@ -47,16 +47,16 @@ int	forks_pickup(t_philo *philo)
 	if (philo->id % 2 == 0)
 	{
 		if (!single_fork_pickup(philo, philo->r_fork, &res))
-			return (-1);
+			return (-3);
 		if (!single_fork_pickup(philo, philo->l_fork, &res))
-			return (-1);
+			return (-3);
 	}
 	else
 	{
 		if (!single_fork_pickup(philo, philo->l_fork, &res))
-			return (-1);
+			return (-3);
 		if (!single_fork_pickup(philo, philo->r_fork, &res))
-			return (-1);
+			return (-3);
 	}
 	return (res);
 }
