@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:09:21 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/26 16:37:06 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/26 19:29:14 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ bool	custom_print(t_philo *philo, char *msg);
 bool	uwait(long milliseconds, t_monitor **monitor);
 bool	bool_getter(bool *var, pthread_mutex_t *mutex);
 void	bool_setter(bool *var, bool value, pthread_mutex_t *mutex);
-void	is_valid_integer(char *str);
+int		is_valid_integer(char *str);
 void	init_data(t_philo **philo, t_fork **fork, t_monitor **mon, char **argv);
 void	dinner(t_philo **philo, t_monitor **monitor);
 void	join_n_free(t_philo **philo, t_monitor **monitor, t_fork **fork_node);

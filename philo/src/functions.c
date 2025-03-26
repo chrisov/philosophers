@@ -6,30 +6,25 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:28:51 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/26 16:38:38 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/26 19:28:49 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philo.h"
 
-void	is_valid_integer(char *str)
+int	is_valid_integer(char *str)
 {
 	if (*str == '\0')
-	{
-		printf("%sError! (invalid argument)%s\n", RED, RES);
-		exit(EXIT_FAILURE);
-	}
+		return (-1);
 	if (*str == '+')
 		str++;
 	while (*str)
 	{
 		if (!(*str >= '0' && *str <= '9'))
-		{
-			printf("%sError! (invalid argument)%s\n", RED, RES);
-			exit(EXIT_FAILURE);
-		}
+			return (-1);
 		str++;
 	}
+	return (0);
 }
 
 int	ft_atoi(char *str)

@@ -6,22 +6,19 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:28:51 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/26 16:44:58 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/26 19:30:13 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philo.h"
 
-static void	*safe_malloc(size_t size, char *msg)
+static void	*safe_malloc(size_t size)
 {
 	void	*arg;
 
 	arg = malloc(size);
 	if (!arg)
-	{
-		perror(msg);
-		exit (EXIT_FAILURE);
-	}
+		return (NULL);
 	return (arg);
 }
 
@@ -36,7 +33,7 @@ static t_fork	*forks_init(char *param)
 	t_fork	*current;
 	int		i;
 
-	fork_head = safe_malloc(sizeof(t_fork), "Error allocating fork");
+	fork_head = safe_malloc(sizeof(t_fork));
 	fork_head->up = false;
 	if (pthread_mutex_init(&fork_head->mtx, NULL) != 0)
 		return (printf("Mutex init failed\n"), NULL);
@@ -45,7 +42,7 @@ static t_fork	*forks_init(char *param)
 	i = 0;
 	while (++i < ft_atoi(param))
 	{
-		current->next = safe_malloc(sizeof(t_fork), "Error allocating fork");
+		current->next = safe_malloc(sizeof(t_fork));
 		current = current->next;
 		current->up = false;
 		if (pthread_mutex_init(&current->mtx, NULL) != 0)
@@ -64,7 +61,7 @@ static t_monitor	*monitor_init(char **param)
 {
 	t_monitor	*monitor;
 
-	monitor = safe_malloc(sizeof(t_monitor), "Error allocating monitor");
+	monitor = safe_malloc(sizeof(t_monitor));
 	monitor->n = ft_atoi(param[0]);
 	monitor->time_to_die = ft_atoi(param[1]);
 	monitor->time_to_eat = ft_atoi(param[2]);
@@ -88,17 +85,14 @@ static t_philo	*philos_init(t_fork *fork, t_monitor *monitor)
 	t_philo			*philos;
 	unsigned int	i;
 
-	philos = safe_malloc(monitor->n * sizeof(t_philo),
-			"Error allocating philos");
+	philos = safe_malloc(monitor->n * sizeof(t_philo));
 	i = -1;
 	while (++i < monitor->n)
 	{
 		philos[i].r_fork = fork;
+		philos[i].l_fork = fork->next;
 		if (monitor->n > 1)
-		{
-			philos[i].l_fork = fork->next;
 			fork = fork->next;
-		}
 		philos[i].id = i + 1;
 		philos[i].last_meal_time = 0;
 		philos[i].meals_eaten = 0;

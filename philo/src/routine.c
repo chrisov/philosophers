@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:09:10 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/26 16:43:50 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/26 19:34:48 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,5 @@ void	dinner(t_philo **philo, t_monitor **monitor)
 	dead = monitor_routine(*philo, *monitor);
 	usleep(4200);
 	if (dead)
-		printf("%s%ld %d died%s\n", RED,
-			timer((*monitor)->sit_time), dead->id, RES);
+		custom_print(dead, RED"died"RES);
 }
