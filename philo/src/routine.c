@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:09:10 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/26 14:48:47 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/26 16:21:01 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,24 +79,22 @@ static void	*philo_routine(void *arg)
 	philo = (t_philo *)arg;
 	philo_init(philo);
 	count_f = 0;
-	while (1)
+	while (!bool_getter(&philo->monitor->end, &philo->monitor->death_mtx))
 	{
 		count_f += forks_pickup(philo);
 		if (count_f < 0)
-			return (forks_down(philo, &count_f), NULL);
+			break ;
 		if (count_f == 2)
 		{
 			if (!eating(philo, &count_f))
-				return (forks_down(philo, &count_f), NULL);
+				break ;
 			if (!sleeping(philo))
-				return (forks_down(philo, &count_f), NULL);
+				break ;
 			custom_print(philo, "is thinking");
-			if (bool_getter(&philo->monitor->end, &philo->monitor->death_mtx))
-				return (forks_down(philo, &count_f), NULL);
-			usleep(100);
 		}
+		usleep(100);
 	}
-	return (NULL);
+	return (forks_down(philo, &count_f), NULL);
 }
 
 void	dinner(t_philo **philo, t_monitor **monitor)
@@ -111,7 +109,7 @@ void	dinner(t_philo **philo, t_monitor **monitor)
 	while (++i < (*monitor)->n)
 		pthread_create(&(*philo)[i].thread, NULL, philo_routine, &(*philo)[i]);
 	dead = monitor_routine(*philo, *monitor);
-	usleep(3200);
+	usleep(4200);
 	if (dead)
 		printf("%s%ld %d died%s\n", RED,
 			timer((*monitor)->sit_time), dead->id, RES);

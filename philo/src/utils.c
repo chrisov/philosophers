@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 17:22:59 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/26 14:47:36 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/26 16:20:24 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static bool	single_fork_pickup(t_philo *philo, t_fork *fork, int *count)
 
 static void	single_fork_down(t_fork *fork, int *count)
 {
-	if (bool_getter(&fork->up, &fork->mtx))
+	if (fork && bool_getter(&fork->up, &fork->mtx))
 	{
 		bool_setter(&fork->up, false, &fork->mtx);
 		(*count)--;
