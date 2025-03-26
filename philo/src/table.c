@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:28:51 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/25 11:47:44 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/26 16:44:58 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static t_fork	*forks_init(char *param)
 	int		i;
 
 	fork_head = safe_malloc(sizeof(t_fork), "Error allocating fork");
-	fork_head->fork_up = false;
+	fork_head->up = false;
 	if (pthread_mutex_init(&fork_head->mtx, NULL) != 0)
 		return (printf("Mutex init failed\n"), NULL);
 	fork_head->next = NULL;
@@ -47,7 +47,7 @@ static t_fork	*forks_init(char *param)
 	{
 		current->next = safe_malloc(sizeof(t_fork), "Error allocating fork");
 		current = current->next;
-		current->fork_up = false;
+		current->up = false;
 		if (pthread_mutex_init(&current->mtx, NULL) != 0)
 			return (printf("Fork mutex init failed\n"), NULL);
 		current->next = NULL;
@@ -83,20 +83,20 @@ static t_monitor	*monitor_init(char **param)
 	return (monitor);
 }
 
-static t_philo	*philos_init(t_philo *philos, t_fork *fork, t_monitor *monitor)
+static t_philo	*philos_init(t_fork *fork, t_monitor *monitor)
 {
-	// t_philo	*philos;
-	int		i;
+	t_philo			*philos;
+	unsigned int	i;
 
-	// philos = safe_malloc(monitor->n * sizeof(t_philo),
-	// 		"Error allocating philos");
+	philos = safe_malloc(monitor->n * sizeof(t_philo),
+			"Error allocating philos");
 	i = -1;
 	while (++i < monitor->n)
 	{
-		philos[i].right_fork = fork;
+		philos[i].r_fork = fork;
 		if (monitor->n > 1)
 		{
-			philos[i].left_fork = fork->next;
+			philos[i].l_fork = fork->next;
 			fork = fork->next;
 		}
 		philos[i].id = i + 1;
@@ -108,9 +108,9 @@ static t_philo	*philos_init(t_philo *philos, t_fork *fork, t_monitor *monitor)
 	return (philos);
 }
 
-void	init_data(t_philo *philo, t_fork **fork, t_monitor **mon, char **argv)
+void	init_data(t_philo **philo, t_fork **fork, t_monitor **mon, char **argv)
 {
 	*fork = forks_init(argv[0]);
 	*mon = monitor_init(argv);
-	philos_init(philo, *fork, *mon);
+	*philo = philos_init(*fork, *mon);
 }

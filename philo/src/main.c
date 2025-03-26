@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:09:10 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/25 11:27:50 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/26 16:43:25 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,13 @@ static void	param_check(char **arr, int len)
 
 int	main(int argc, char **argv)
 {
-	t_philo			philo[200];
+	t_philo			*philo;
 	t_fork			*fork;
 	t_monitor		*monitor;
 
 	param_check(++argv, --argc);
-	init_data(philo, &fork, &monitor, argv);
-	dinner(philo, &monitor);
-	join_n_free(philo, &monitor, &fork);
+	init_data(&philo, &fork, &monitor, argv);
+	dinner(&philo, &monitor);
+	join_n_free(&philo, &monitor, &fork);
 	return (0);
 }

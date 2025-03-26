@@ -6,7 +6,7 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 13:28:51 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/24 20:11:32 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/26 16:38:38 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,5 +89,5 @@ long	timer(struct timeval start)
 	gettimeofday(&now, NULL);
 	sec = now.tv_sec - start.tv_sec;
 	usec = now.tv_usec - start.tv_usec;
-	return (sec * 1e3 + usec / 1e3);
+	return (sec * 1000 + usec / 1000);
 }

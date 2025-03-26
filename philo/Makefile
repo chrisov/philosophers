@@ -8,7 +8,7 @@ SRCDIR = ./src
 OBJDIR = ./obj
 INCDIR = ./include
 
-SRCS = $(SRCDIR)/main.c $(SRCDIR)/functions.c $(SRCDIR)/table.c\
+SRCS = $(SRCDIR)/main.c $(SRCDIR)/functions.c $(SRCDIR)/table.c \
 		$(SRCDIR)/routine.c $(SRCDIR)/more_functions.c $(SRCDIR)/utils.c
 
 OBJS = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)

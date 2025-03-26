@@ -6,88 +6,89 @@
 /*   By: dchrysov <dchrysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 17:22:59 by dchrysov          #+#    #+#             */
-/*   Updated: 2025/03/24 20:08:07 by dchrysov         ###   ########.fr       */
+/*   Updated: 2025/03/26 16:20:24 by dchrysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philo.h"
 
-/**
- * @returns False if simulation is over, true otherwise
- * 
- * @note Makes even-id philos to pickup the right fork first, the other way
- * around for the left-id ones.
- */
-bool	forks_pickup(t_philo *philo)
+static bool	single_fork_pickup(t_philo *philo, t_fork *fork, int *count)
 {
-	if (philo->id % 2 == 0)
+	if (fork && !bool_getter(&fork->up, &fork->mtx))
 	{
-		bool_setter(&philo->right_fork->fork_up, true, &philo->right_fork->mtx);
-		pthread_mutex_lock(&philo->right_fork->mtx);
+		bool_setter(&fork->up, true, &fork->mtx);
 		if (!custom_print(philo, "has taken a fork"))
 			return (false);
-		bool_setter(&philo->left_fork->fork_up, true, &philo->left_fork->mtx);
-		pthread_mutex_lock(&philo->left_fork->mtx);
-		if (!custom_print(philo, "has taken a fork"))
-			return (false);
-	}
-	else
-	{
-		if (!philo->left_fork)
-			return (false);
-		bool_setter(&philo->left_fork->fork_up, true, &philo->left_fork->mtx);
-		pthread_mutex_lock(&philo->left_fork->mtx);
-		if (!custom_print(philo, "has taken a fork"))
-			return (false);
-		bool_setter(&philo->right_fork->fork_up, true, &philo->right_fork->mtx);
-		pthread_mutex_lock(&philo->right_fork->mtx);
-		if (!custom_print(philo, "has taken a fork"))
-			return (false);
+		(*count)++;
 	}
 	return (true);
 }
 
-/**
- * @brief Set down a philo's forks, with the opposite order of how they got
- * picked up.
- */
-void	*forks_down(t_philo *philo)
+static void	single_fork_down(t_fork *fork, int *count)
 {
-	if (philo->id % 2 == 0)
+	if (fork && bool_getter(&fork->up, &fork->mtx))
 	{
-		pthread_mutex_unlock(&philo->left_fork->mtx);
-		bool_setter(&philo->left_fork->fork_up, false,
-			&philo->left_fork->mtx);
-		pthread_mutex_unlock(&philo->right_fork->mtx);
-		bool_setter(&philo->right_fork->fork_up, false,
-			&philo->right_fork->mtx);
+		bool_setter(&fork->up, false, &fork->mtx);
+		(*count)--;
 	}
-	else
-	{
-		pthread_mutex_unlock(&philo->right_fork->mtx);
-		bool_setter(&philo->right_fork->fork_up, false,
-			&philo->right_fork->mtx);
-		if (philo->left_fork)
-		{
-			pthread_mutex_unlock(&philo->left_fork->mtx);
-			bool_setter(&philo->left_fork->fork_up, false,
-				&philo->left_fork->mtx);
-		}
-	}
-	return (NULL);
 }
 
 /**
- * @brief Updates the values of meal time and 
+ * @brief Makes even-id philos to pickup the right fork first, the other way
+ * around for the left-id ones.
+ * 
+ * @returns The number of picked up forks, -3 in case of a philo's death
  */
-int	meal_counter(t_philo *philo, t_monitor *mon, int *meal_time)
+int	forks_pickup(t_philo *philo)
 {
-	int	count;
+	int	res;
 
-	count = 0;
-	pthread_mutex_lock(&mon->meals_mtx);
-	*meal_time = philo->last_meal_time;
-	count += philo->meals_eaten;
-	pthread_mutex_unlock(&mon->meals_mtx);
-	return (count);
+	res = 0;
+	if (philo->id % 2 == 0)
+	{
+		if (!single_fork_pickup(philo, philo->r_fork, &res))
+			return (-3);
+		if (!single_fork_pickup(philo, philo->l_fork, &res))
+			return (-3);
+	}
+	else
+	{
+		if (!single_fork_pickup(philo, philo->l_fork, &res))
+			return (-3);
+		if (!single_fork_pickup(philo, philo->r_fork, &res))
+			return (-3);
+	}
+	return (res);
+}
+
+/**
+ * @returns False if simulation is over, true otherwise
+ * 
+ * @brief Makes even-id philos to pickup the right fork first, the other way
+ * around for the left-id ones.
+ */
+void	forks_down(t_philo *philo, int *fork_count)
+{
+	if (philo->id % 2 == 0)
+	{
+		single_fork_down(philo->l_fork, fork_count);
+		single_fork_down(philo->r_fork, fork_count);
+	}
+	else
+	{
+		single_fork_down(philo->r_fork, fork_count);
+		single_fork_down(philo->l_fork, fork_count);
+	}
+}
+
+/**
+ * @brief Makes odd number of philos to think at the beginning of the sim
+ */
+void	philo_init(t_philo *philo)
+{
+	if (philo->id % 2 != 0)
+	{
+		custom_print(philo, "is thinking");
+		uwait(philo->monitor->time_to_sleep / 2, &philo->monitor);
+	}
 }
