@@ -50,7 +50,7 @@ Within each loop iteration:
 If both forks are acquired, the philosopher proceeds to eat (eating()), which updates their last meal time and meal count in a thread-safe manner. 
 After eating, the philosopher releases the forks. The philosopher then sleeps for a configured duration (sleeping()),
 followed by a brief thinking period. The loop includes a short sleep (usleep(100)) to reduce busy-waiting and allow other threads to run.
-At the end of the routine, any held forks are released to ensure proper resource cleanup.</p>
+At the end of the routine, any held forks are released to ensure proper resource cleanup.</p><br>
 
 ## Monitor Thread Approach
 <p>The monitor thread is implemented in the monitor_routine() function. Its role is to continuously check the state of all 
