@@ -4,10 +4,9 @@
 
 <br>
 <div align="center">
-
-### 🛠 C (Programming Language)
-### 🛠 pthread.h (Concurrent Programming)
-
+  
+  ### 🛠 C (Programming Language)
+  ### 🛠 pthread.h (Concurrent Programming)
 </div>
 
 <br>
@@ -35,14 +34,17 @@ thread to detect starvation or death. Shared states, such as meal counts (unsign
 and cleanup functions ensure proper resource deallocation. The most critical aspect is the synchronization strategy, which balances 
 resource contention and fairness, preventing both deadlock and starvation while maintaining high concurrency.</p>
 
-<br><p style="text-align:center;">./philo [num_of_philo]  [time_to_die]  [time_to_eat]  [time_to_sleep]  [num_of_eat_times](OPT)</p><br>
+<div align="center"><br>
+
+  ### ./philo [num_of_philo]  [time_to_die]  [time_to_eat]  [time_to_sleep]  [num_of_eat_times] (OPT)
+</div><br>
 
 ## Philosopher Routine Approach
 <p>Each philosopher is represented by a thread running the philo_routine function. The routine begins by initializing 
 the philosopher's state. The philosopher then enters a loop that continues until the simulation ends (either due to
 a philosopher dying or all philosophers eating the required number of meals).</p>
 
-Within< each loop iteration:
+Within each loop iteration:
 
 <p>The philosopher attempts to pick up both forks (using forks_pickup()). If unsuccessful or if the simulation has ended, the loop breaks.
 If both forks are acquired, the philosopher proceeds to eat (eating()), which updates their last meal time and meal count in a thread-safe manner. 
