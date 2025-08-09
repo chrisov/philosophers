@@ -12,6 +12,14 @@
 
 #include "../inc/philo.h"
 
+/**
+ * @brief Monitors philosophers for death or completion of meals.
+ * 
+ * @param philo Array of philosophers.
+ * @param mon Pointer to the monitor.
+ * 
+ * @return Pointer to the philosopher who died, or NULL if all finished.
+ */
 static void	*monitor_routine(t_philo *philo, t_monitor *mon)
 {
 	unsigned int	i;
@@ -37,6 +45,13 @@ static void	*monitor_routine(t_philo *philo, t_monitor *mon)
 	}
 }
 
+/**
+ * @brief Makes a philosopher sleep for the configured time.
+ * 
+ * @param philo Pointer to the philosopher.
+ * 
+ * @return true on success.
+ */
 static bool	sleeping(t_philo *philo)
 {
 	if (!custom_print(philo, "is sleeping"))
@@ -45,6 +60,14 @@ static bool	sleeping(t_philo *philo)
 	return (true);
 }
 
+/**
+ * @brief Handles the eating routine for a philosopher.
+ * 
+ * @param philo Pointer to the philosopher.
+ * @param fork_count Pointer to the fork count.
+ * 
+ * @return true if eating succeeded, false otherwise.
+ */
 static bool	eating(t_philo *philo, int *fork_count)
 {
 	t_monitor	*monitor;
@@ -68,8 +91,14 @@ static bool	eating(t_philo *philo, int *fork_count)
 }
 
 /**
- * @brief The odd-number-id-philos are init with sleeping for half
- * their sleeping time.
+ * @brief Main routine executed by each philosopher thread.
+ *
+ * Initializes the philosopher, then enters a loop where the philosopher attempts
+ * to pick up forks, eat, sleep, and think. The loop continues until the simulation
+ * ends or the philosopher dies. At the end, all held forks are released.
+ *
+ * @param arg Pointer to the philosopher struct (t_philo).
+ * @return Always returns NULL.
  */
 static void	*philo_routine(void *arg)
 {
@@ -97,6 +126,12 @@ static void	*philo_routine(void *arg)
 	return (forks_down(philo, &count_f), NULL);
 }
 
+/**
+ * @brief Starts the dinner simulation by creating philosopher threads and monitoring.
+ * 
+ * @param philo Pointer to the philosopher array pointer.
+ * @param monitor Pointer to the monitor pointer.
+ */
 void	dinner(t_philo **philo, t_monitor **monitor)
 {
 	unsigned int	i;

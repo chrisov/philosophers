@@ -12,6 +12,13 @@
 
 #include "../inc/philo.h"
 
+/**
+ * @brief Allocates memory safely, returns NULL on failure.
+ * 
+ * @param size Size to allocate.
+ * 
+ * @return Pointer to allocated memory or NULL.
+ */
 static void	*safe_malloc(size_t size)
 {
 	void	*arg;
@@ -23,9 +30,11 @@ static void	*safe_malloc(size_t size)
 }
 
 /**
- * @brief Initializes i = argv[0] number of forks as a circular linked list.
- *
- * @note Edge case where argv[0] = 1!
+ * @brief Initializes a circular linked list of forks.
+ * 
+ * @param param String representing the number of forks.
+ * 
+ * @return Pointer to the head of the fork list.
  */
 static t_fork	*forks_init(char *param)
 {
@@ -55,7 +64,11 @@ static t_fork	*forks_init(char *param)
 }
 
 /**
- * @brief Init monitor with program's params and the philo list.
+ * @brief Initializes the monitor struct with program parameters.
+ * 
+ * @param param Array of parameter strings.
+ * 
+ * @return Pointer to the initialized monitor struct.
  */
 static t_monitor	*monitor_init(char **param)
 {
@@ -80,6 +93,14 @@ static t_monitor	*monitor_init(char **param)
 	return (monitor);
 }
 
+/**
+ * @brief Initializes the array of philosophers.
+ * 
+ * @param fork Pointer to the first fork.
+ * @param monitor Pointer to the monitor struct.
+ * 
+ * @return Pointer to the philosopher array.
+ */
 static t_philo	*philos_init(t_fork *fork, t_monitor *monitor)
 {
 	t_philo			*philos;
@@ -102,6 +123,14 @@ static t_philo	*philos_init(t_fork *fork, t_monitor *monitor)
 	return (philos);
 }
 
+/**
+ * @brief Initializes all simulation data structures.
+ * 
+ * @param philo Pointer to the philosopher array pointer.
+ * @param fork Pointer to the fork list pointer.
+ * @param mon Pointer to the monitor pointer.
+ * @param argv Array of argument strings.
+ */
 void	init_data(t_philo **philo, t_fork **fork, t_monitor **mon, char **argv)
 {
 	*fork = forks_init(argv[0]);

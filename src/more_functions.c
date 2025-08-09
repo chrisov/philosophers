@@ -12,6 +12,14 @@
 
 #include "../inc/philo.h"
 
+/**
+ * @brief Prints a message for a philosopher in a thread-safe manner.
+ * 
+ * @param philo Pointer to the philosopher.
+ * @param msg Message to print.
+ * 
+ * @return true on success.
+ */
 bool	custom_print(t_philo *philo, char *msg)
 {
 	t_monitor	*mon;
@@ -23,6 +31,14 @@ bool	custom_print(t_philo *philo, char *msg)
 	return (true);
 }
 
+/**
+ * @brief Waits for a specified time unless the simulation ends.
+ * 
+ * @param milliseconds Time to wait in milliseconds.
+ * @param monitor Pointer to the monitor pointer.
+ * 
+ * @return true if waited successfully, false if simulation ended.
+ */
 bool	uwait(long milliseconds, t_monitor **monitor)
 {
 	struct timeval	start;
@@ -41,7 +57,13 @@ bool	uwait(long milliseconds, t_monitor **monitor)
 }
 
 /**
- * @brief Updates the values of meal time and 
+ * @brief Gets the last meal time and meal count for a philosopher.
+ * 
+ * @param philo Pointer to the philosopher.
+ * @param mon Pointer to the monitor.
+ * @param meal_time Pointer to store last meal time.
+ * 
+ * @return Number of meals eaten.
  */
 int	meal_counter(t_philo *philo, t_monitor *mon, unsigned int *meal_time)
 {
@@ -54,6 +76,15 @@ int	meal_counter(t_philo *philo, t_monitor *mon, unsigned int *meal_time)
 	return (count);
 }
 
+/**
+ * @brief Frees a circular linked list of forks and destroys their mutexes.
+ *
+ * This function breaks the circular link, then iterates through the list,
+ * destroys each fork's mutex, frees its memory, and finally sets the head pointer to NULL.
+ *
+ * @param head Pointer to the head pointer of the fork list.
+ * @param n Number of forks in the list.
+ */
 static void	free_circular_list(t_fork **head, int n)
 {
 	t_fork	*temp;
@@ -79,6 +110,13 @@ static void	free_circular_list(t_fork **head, int n)
 	*head = NULL;
 }
 
+/**
+ * @brief Joins philosopher threads and frees all allocated resources.
+ * 
+ * @param philo Pointer to the philosopher array pointer.
+ * @param monitor Pointer to the monitor pointer.
+ * @param fork_node Pointer to the fork list pointer.
+ */
 void	join_n_free(t_philo **philo, t_monitor **monitor, t_fork **fork_node)
 {
 	unsigned int	i;
@@ -92,4 +130,6 @@ void	join_n_free(t_philo **philo, t_monitor **monitor, t_fork **fork_node)
 	pthread_mutex_destroy(&(*monitor)->meals_mtx);
 	free(*monitor);
 	*monitor = NULL;
+	free(*philo);
+	*philo = NULL;
 }

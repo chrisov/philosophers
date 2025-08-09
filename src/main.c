@@ -13,7 +13,12 @@
 #include "../inc/philo.h"
 
 /**
- * @brief Checks the program's arguments for invalidity.
+ * @brief Checks the validity of program arguments.
+ * 
+ * @param arr Array of argument strings.
+ * @param len Number of arguments.
+ * 
+ * @return 0 if valid, -1 otherwise.
  */
 static int	param_check(char **arr, int len)
 {

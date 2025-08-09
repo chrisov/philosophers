@@ -17,10 +17,10 @@ NAME = philo
 all: $(NAME)
 
 $(NAME): $(OBJDIR) $(OBJS)
-	@echo "\033[33mCompilating...\033[0m"
+	@printf "[.]   📦 Compiling '\033[33m$(NAME)\033[0m'...\r"
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
-	@echo "Compilation \033[32msuccessful\033[0m!"
-	@echo "eg: ./$(NAME) [num_of_philo] [time_to_die] [time_to_eat] [time_to_sleep] (OPTIONAL)[num_of_eat_times]"
+	@echo "🚀 '\033[33m$(NAME)\033[0m' compiled \033[32msuccessfully\033[0m!"
+	@echo "\neg: ./$(NAME) [num_of_philo] [time_to_die] [time_to_eat] [time_to_sleep] [num_of_eat_times](OPT)"
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c | $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -29,17 +29,14 @@ $(OBJDIR):
 	mkdir -p $(OBJDIR)
 
 clean:
-	@echo "\033[33mCleaning up build and library files...\033[0m"
 	rm -f $(OBJDIR)/*.o
 	rm -rf $(OBJDIR)
-	@echo "All build files cleaned up \033[32msuccessfully\033[0m!"
 
 fclean: clean
-	clear
-	@echo "\033[33mCleaning up executables and static libraries...\033[0m"
+	@printf "[.]   🧹 Removing '\033[33m$(NAME)\033[0m' build...\r"
 	rm -f $(NAME)
-	@echo "Executables and static libraries cleaned up \033[32msuccessfully\033[0m!"
-	
+	printf "[✅]  🧹 Removed '\033[33m$(NAME)\033[0m' build...  \n"
+
 re: fclean all
 
 .PHONY: all clean fclean re

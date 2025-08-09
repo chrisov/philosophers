@@ -12,6 +12,15 @@
 
 #include "../inc/philo.h"
 
+/**
+ * @brief Picks up a single fork for a philosopher if available.
+ * 
+ * @param philo Pointer to the philosopher.
+ * @param fork Pointer to the fork.
+ * @param count Pointer to the fork count.
+ * 
+ * @return true if fork was picked up or not needed, false otherwise.
+ */
 static bool	single_fork_pickup(t_philo *philo, t_fork *fork, int *count)
 {
 	if (fork && !bool_getter(&fork->up, &fork->mtx))
@@ -24,6 +33,12 @@ static bool	single_fork_pickup(t_philo *philo, t_fork *fork, int *count)
 	return (true);
 }
 
+/**
+ * @brief Puts down a single fork for a philosopher.
+ * 
+ * @param fork Pointer to the fork.
+ * @param count Pointer to the fork count.
+ */
 static void	single_fork_down(t_fork *fork, int *count)
 {
 	if (fork && bool_getter(&fork->up, &fork->mtx))
@@ -34,10 +49,11 @@ static void	single_fork_down(t_fork *fork, int *count)
 }
 
 /**
- * @brief Makes even-id philos to pickup the right fork first, the other way
- * around for the left-id ones.
+ * @brief Handles fork pickup logic for a philosopher.
  * 
- * @returns The number of picked up forks, -3 in case of a philo's death
+ * @param philo Pointer to the philosopher.
+ * 
+ * @return Number of forks picked up, or -3 if philosopher died.
  */
 int	forks_pickup(t_philo *philo)
 {
@@ -62,10 +78,10 @@ int	forks_pickup(t_philo *philo)
 }
 
 /**
- * @returns False if simulation is over, true otherwise
+ * @brief Handles fork put-down logic for a philosopher.
  * 
- * @brief Makes even-id philos to pickup the right fork first, the other way
- * around for the left-id ones.
+ * @param philo Pointer to the philosopher.
+ * @param fork_count Pointer to the fork count.
  */
 void	forks_down(t_philo *philo, int *fork_count)
 {
@@ -82,7 +98,9 @@ void	forks_down(t_philo *philo, int *fork_count)
 }
 
 /**
- * @brief Makes odd number of philos to think at the beginning of the sim
+ * @brief Initializes a philosopher's state at the start of the simulation.
+ * 
+ * @param philo Pointer to the philosopher.
  */
 void	philo_init(t_philo *philo)
 {

@@ -60,13 +60,13 @@ typedef struct s_philo
 
 long	timer(struct timeval start);
 int		ft_atoi(char *str);
+int		is_valid_integer(char *str);
 int		meal_counter(t_philo *philo, t_monitor *mon, unsigned int *meal_time);
 int		forks_pickup(t_philo *philo);
 bool	custom_print(t_philo *philo, char *msg);
 bool	uwait(long milliseconds, t_monitor **monitor);
 bool	bool_getter(bool *var, pthread_mutex_t *mutex);
 void	bool_setter(bool *var, bool value, pthread_mutex_t *mutex);
-int		is_valid_integer(char *str);
 void	init_data(t_philo **philo, t_fork **fork, t_monitor **mon, char **argv);
 void	dinner(t_philo **philo, t_monitor **monitor);
 void	join_n_free(t_philo **philo, t_monitor **monitor, t_fork **fork_node);

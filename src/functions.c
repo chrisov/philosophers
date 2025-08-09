@@ -12,6 +12,13 @@
 
 #include "../inc/philo.h"
 
+/**
+ * @brief Checks if a string represents a valid integer.
+ * 
+ * @param str The string to check.
+ * 
+ * @return 0 if valid, -1 otherwise.
+ */
 int	is_valid_integer(char *str)
 {
 	if (*str == '\0')
@@ -27,6 +34,13 @@ int	is_valid_integer(char *str)
 	return (0);
 }
 
+/**
+ * @brief Converts a string to an integer.
+ * 
+ * @param str The string to convert.
+ * 
+ * @return The integer value, or INT_MIN on overflow.
+ */
 int	ft_atoi(char *str)
 {
 	long long	result;
@@ -52,6 +66,13 @@ int	ft_atoi(char *str)
 	return ((int)(result * sign));
 }
 
+/**
+ * @brief Sets a boolean variable in a thread-safe manner.
+ * 
+ * @param var Pointer to the boolean variable.
+ * @param value Value to set.
+ * @param mutex Mutex to lock during the operation.
+ */
 void	bool_setter(bool *var, bool value, pthread_mutex_t *mutex)
 {
 	pthread_mutex_lock(mutex);
@@ -60,7 +81,12 @@ void	bool_setter(bool *var, bool value, pthread_mutex_t *mutex)
 }
 
 /**
- * @returns Var's value.
+ * @brief Gets the value of a boolean variable in a thread-safe manner.
+ * 
+ * @param var Pointer to the boolean variable.
+ * @param mutex Mutex to lock during the operation.
+ * 
+ * @return The value of the variable.
  */
 bool	bool_getter(bool *var, pthread_mutex_t *mutex)
 {
@@ -73,7 +99,11 @@ bool	bool_getter(bool *var, pthread_mutex_t *mutex)
 }
 
 /**
- * @brief Calculates time passed since the beginning of the program run.
+ * @brief Calculates the elapsed time in milliseconds since a given start time.
+ * 
+ * @param start The start time.
+ * 
+ * @return Elapsed time in milliseconds.
  */
 long	timer(struct timeval start)
 {
